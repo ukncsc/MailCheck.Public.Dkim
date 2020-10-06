@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AWSProjectType>Lambda</AWSProjectType>
+  </PropertyGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.3.17" />
+    <PackageReference Include="MailCheck.Common.Data" Version="2.6.0.58" />
+    <PackageReference Include="MailCheck.Common.Messaging" Version="2.6.0.58" />
+    <PackageReference Include="MailCheck.Common.Util" Version="2.6.0.58" />
+    <PackageReference Include="MailCheck.Common.SSM" Version="2.6.0.58" />
+    <PackageReference Include="MailCheck.DomainStatus.Contracts" Version="0.0.1.52" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+
+
+
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MailCheck.Dkim.Contracts\MailCheck.Dkim.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Dao\DkimEntityDaoResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DkimEntityDaoResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Dao\DkimEntityDaoResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DkimEntityDaoResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+</Project>

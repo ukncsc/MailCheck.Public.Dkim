@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\2018-07-31-1627_create_dkim_scheduled_records_table.sql" />
+    <None Remove="Scripts\2018-07-31-1629_create_dkim_scheduled_records_grants.sql" />
+    <None Remove="Scripts\2018-08-06-1012_create_dkim_entity_table.sql" />
+    <None Remove="Scripts\2018-08-08-0941-create-dkim-entity-grants.sql" />
+    <None Remove="Scripts\2018-08-14-2016_create_dkim_api_grants.sql" />
+    <None Remove="Scripts\2018-10-25-1040_make_id_primary_key.sql" />
+    <None Remove="Scripts\2018-10-25-1041_create_dkim_entity_history_table.sql" />
+    <None Remove="Scripts\2018-10-25-1042_create_dkim_entity_history_table_grants.sql" />
+    <None Remove="Scripts\2018-12-13-1628-update-dkim-history-table.sql" />
+    <None Remove="Scripts\2019-01-14-1312-update-dkim-api-grants.sql" />
+    <None Remove="Scripts\2019-02-27-1457-lower_casing_domains.sql" />
+    <None Remove="Scripts\2019-06-21-0820-create_new_history_table.sql" />
+    <None Remove="Scripts\2019-07-09-1222-removing_state_and_version_coulmns_from_schedule_table - Copy.sql" />
+    <None Remove="Scripts\2019-07-17-1415-add_delete_grants.sql" />
+    <None Remove="Scripts\2020-04-03-1453_dev_report_grants.sql.sql" />
+    <None Remove="Scripts\2020-04-06-1453_dev_report_s3_grants.sql" />
+    <None Remove="Scripts\everytime\grants.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\2018-10-25-1041_create_dkim_entity_history_table.sql" />
+    <EmbeddedResource Include="Scripts\2018-10-25-1042_create_dkim_entity_history_table_grants.sql" />
+    <EmbeddedResource Include="Scripts\2018-12-13-1628-update-dkim-history-table.sql" />
+    <EmbeddedResource Include="Scripts\2019-06-21-0820-create_new_history_table.sql" />
+    <EmbeddedResource Include="Scripts\2019-02-27-1457-lower_casing_domains.sql" />
+    <EmbeddedResource Include="Scripts\2019-01-14-1312-update-dkim-api-grants.sql" />
+    <EmbeddedResource Include="Scripts\2018-10-25-1040_make_id_primary_key.sql" />
+    <EmbeddedResource Include="Scripts\2018-08-06-1012_create_dkim_entity_table.sql" />
+    <EmbeddedResource Include="Scripts\2018-08-14-2016_create_dkim_api_grants.sql" />
+    <EmbeddedResource Include="Scripts\2018-07-31-1629_create_dkim_scheduled_records_grants.sql" />
+    <EmbeddedResource Include="Scripts\2018-07-31-1627_create_dkim_scheduled_records_table.sql" />
+    <EmbeddedResource Include="Scripts\2018-08-08-0941-create-dkim-entity-grants.sql" />
+    <EmbeddedResource Include="Scripts\2020-04-06-1453_dev_report_s3_grants.sql" />
+    <EmbeddedResource Include="Scripts\2020-04-03-1453_dev_report_grants.sql.sql" />
+    <EmbeddedResource Include="Scripts\2019-07-17-1415-add_delete_grants.sql" />
+    <EmbeddedResource Include="Scripts\everytime\grants.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailCheck.Common.Data.Migration" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

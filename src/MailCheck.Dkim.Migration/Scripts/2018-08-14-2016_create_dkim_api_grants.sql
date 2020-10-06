@@ -1,0 +1,1 @@
+﻿GRANT SELECT ON `dkim_entity` TO '{env}-dkim-api' IDENTIFIED BY '{password}';

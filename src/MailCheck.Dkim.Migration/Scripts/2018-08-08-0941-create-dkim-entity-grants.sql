@@ -1,0 +1,1 @@
+﻿GRANT SELECT, INSERT, UPDATE ON `dkim_entity` TO '{env}-dkim-ent' IDENTIFIED BY '{password}';

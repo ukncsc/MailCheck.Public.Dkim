@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="5.0.1" />
+    <PackageReference Include="MailCheck.Common.TestSupport" Version="1.4.1.48" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.12.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MailCheck.Dkim.Migration\MailCheck.Dkim.Migration.csproj" />
+    <ProjectReference Include="..\MailCheck.Dkim.Scheduler\MailCheck.Dkim.Scheduler.csproj" />
+  </ItemGroup>
+    <Target Name="ChangeAliasesOfMySqlData" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'MySql.Data'">
+        <Aliases>MySqlData</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,1 @@
+﻿GRANT SELECT, INSERT, UPDATE ON `dkim_scheduled_records` TO '{env}-dkim-sch' IDENTIFIED BY '{password}';
