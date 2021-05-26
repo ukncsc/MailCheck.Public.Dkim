@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DeleteDkimRecord" xml:space="preserve">
-    <value>DELETE FROM dkim_scheduled_records WHERE LOWER(id) = LOWER(@id);</value>
+    <value>DELETE FROM dkim_scheduled_records WHERE id = @id;</value>
   </data>
   <data name="InsertOrUpdateRecord" xml:space="preserve">
-    <value>INSERT IGNORE INTO dkim_scheduled_records (id, last_checked) VALUES (LOWER(@domain), UTC_TIMESTAMP());</value>
+    <value>INSERT IGNORE INTO dkim_scheduled_records (id, last_checked) VALUES (@domain, UTC_TIMESTAMP());</value>
   </data>
   <data name="SelectDkimRecord" xml:space="preserve">
-    <value>SELECT id FROM dkim_scheduled_records WHERE LOWER(id) = LOWER(@domain);</value>
+    <value>SELECT id FROM dkim_scheduled_records WHERE id = @domain;</value>
   </data>
 </root>

@@ -9,11 +9,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.3.17" />
-    <PackageReference Include="MailCheck.Common.Data" Version="2.6.0.58" />
-    <PackageReference Include="MailCheck.Common.Messaging" Version="2.6.0.58" />
-    <PackageReference Include="MailCheck.Common.Util" Version="2.6.0.58" />
-    <PackageReference Include="MailCheck.Common.SSM" Version="2.6.0.58" />
-    <PackageReference Include="MailCheck.DomainStatus.Contracts" Version="0.0.1.52" />
+    <PackageReference Include="MailCheck.Common.Contracts" Version="5.1.0" />
+    <PackageReference Include="MailCheck.Common.Data" Version="5.1.0" />
+    <PackageReference Include="MailCheck.Common.Messaging" Version="5.1.0" />
+    <PackageReference Include="MailCheck.Common.Util" Version="5.1.0" />
+    <PackageReference Include="MailCheck.Common.SSM" Version="5.1.0" />
+    <PackageReference Include="MailCheck.DomainStatus.Contracts" Version="0.0.2.126" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
 
 

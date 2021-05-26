@@ -2,9 +2,11 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using FakeItEasy;
+using MailCheck.Common.Data;
 using MailCheck.Common.Data.Abstractions;
 using MailCheck.Common.Data.Util;
 using MailCheck.Common.TestSupport;
+using MailCheck.Common.Util;
 using MailCheck.Dkim.Migration;
 using MailCheck.Dkim.Scheduler.Config;
 using MailCheck.Dkim.Scheduler.Dao;
@@ -16,8 +18,9 @@ namespace MailCheck.Dkim.Scheduler.Test.Dao
     [TestFixture(Category = "Integration")]
     public class DkimPeriodicSchedulerDaoTests : DatabaseTestBase
     {
-        private IConnectionInfoAsync _connectionInfoAsync;
+        private IDatabase _database;
         private IDkimSchedulerConfig _config;
+        private IClock _clock;
         private DkimPeriodicSchedulerDao _dkimPeriodicSchedulerDao;
         private DkimSchedulerDao _dkimSchedulerDao;
 
@@ -26,19 +29,19 @@ namespace MailCheck.Dkim.Scheduler.Test.Dao
         {
             base.SetUp();
 
-            _connectionInfoAsync = A.Fake<IConnectionInfoAsync>();
-
+            _database = A.Fake<IDatabase>();
             _config = A.Fake<IDkimSchedulerConfig>();
+            _clock = A.Fake<IClock>();
 
-            A.CallTo(() => _config.RefreshIntervalSeconds).Returns(86400);
+            A.CallTo(() => _config.RefreshIntervalSeconds).Returns(14400);
             A.CallTo(() => _config.DomainsLimit).Returns(10);
-            A.CallTo(() => _connectionInfoAsync.GetConnectionStringAsync()).Returns(ConnectionString);
 
             _dkimPeriodicSchedulerDao = new DkimPeriodicSchedulerDao(
-                _connectionInfoAsync, 
-                _config);
+                _database,
+                _config,
+                _clock);
 
-            _dkimSchedulerDao = new DkimSchedulerDao(_connectionInfoAsync);
+            _dkimSchedulerDao = new DkimSchedulerDao(_database);
         }
 
         [Test]

@@ -63,26 +63,14 @@ namespace MailCheck.Dkim.Entity.Test.Entity
         }
 
         [Test]
-        public void HandleCreateDomainThrowsIfAlreadyExists()
+        public async Task HandleCreateDomainThrowsIfAlreadyExists()
         {
             A.CallTo(() => _dkimEntityDao.Get(Id)).Returns(new DkimEntityState(Id, 1, DkimState.Created, DateTime.UnixEpoch, DateTime.UnixEpoch, DateTime.UnixEpoch, new List<DkimSelector>()));
-
-            Assert.ThrowsAsync<MailCheckException>(() => _dkimEntity.Handle(new DomainCreated(Id, "test@test.com", DateTime.Now)));
-
-            A.CallTo(() => _dkimEntityDao.Save(A<DkimEntityState>._)).MustNotHaveHappened();
-            A.CallTo(() => _dispatcher.Dispatch(A<DkimEntityCreated>._, A<string>._)).MustNotHaveHappened();
-        }
-
-        [Test]
-        public async Task HandleCreateDomainPublishesIfStale()
-        {
-            A.CallTo(() => _clock.GetDateTimeUtc()).Returns(DateTime.UnixEpoch);
-            A.CallTo(() => _dkimEntityDao.Get(Id)).Returns(new DkimEntityState(Id, 1, DkimState.Created, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(-2), DateTime.UnixEpoch, new List<DkimSelector>()));
 
             await _dkimEntity.Handle(new DomainCreated(Id, "test@test.com", DateTime.Now));
 
             A.CallTo(() => _dkimEntityDao.Save(A<DkimEntityState>._)).MustNotHaveHappened();
-            A.CallTo(() => _dispatcher.Dispatch(A<DkimEntityCreated>.That.Matches(x => x.State == DkimState.Created && x.Id == Id), A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _dispatcher.Dispatch(A<DkimEntityCreated>._, A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
@@ -131,13 +119,13 @@ namespace MailCheck.Dkim.Entity.Test.Entity
         }
 
         [Test]
-        public void HandleAggregateReportDomainDkimSelectorsNoStateExistsThrows()
+        public async Task HandleAggregateReportDomainDkimSelectorsNoStateFailsGracefully()
         {
             A.CallTo(() => _dkimEntityDao.Get(Id)).Returns<DkimEntityState>(null);
+            await _dkimEntity.Handle(new DkimSelectorsSeen("", "", Id, new List<string>()));
 
-            Assert.ThrowsAsync<MailCheckException>(() => _dkimEntity.Handle(new DkimSelectorsSeen("", "", Id, new List<string>())));
-            A.CallTo(() => _dispatcher.Dispatch(A<DomainMissing>.That.Matches(x => x.Id == Id), A<string>._)).MustHaveHappenedOnceExactly();
-
+            A.CallTo(() => _dkimEntityDao.Save(A<DkimEntityState>._)).MustNotHaveHappened();
+            A.CallTo(() => _dispatcher.Dispatch(A<DkimSelectorsUpdated>._, A<string>._)).MustNotHaveHappened();
         }
 
         [Test]

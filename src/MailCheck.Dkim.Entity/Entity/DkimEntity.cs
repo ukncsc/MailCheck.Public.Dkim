@@ -54,45 +54,50 @@ namespace MailCheck.Dkim.Entity.Entity
 
         public async Task Handle(DomainCreated message)
         {
-            string id = message.Id.ToLower();
+            string domain = message.Id.ToLower();
 
-            DkimEntityState state = await _dao.Get(id);
+            DkimEntityState state = await _dao.Get(domain);
 
             if (state != null)
             {
-                if (state.RecordsLastUpdated == null || state.RecordsLastUpdated.Value.AddDays(DaysBeforeBeingConsideredStale) <= _clock.GetDateTimeUtc())
-                {
-                    _dispatcher.Dispatch(new DkimEntityCreated(id, state.Version), _config.SnsTopicArn);
-                    _log.LogInformation("Published DkimEntityCreated for stale DkimEntity {Id}.", id);
-                }
-                else
-                {
-                    throw new MailCheckException($"Cannot handle event {nameof(DomainCreated)} as an up to date DkimEntity already exists for {id}.");
-                }
+                _log.LogInformation($"DkimEntity already exists for {domain}.");
             }
             else
             {
-                state = new DkimEntityState(id, 1, DkimState.Created, DateTime.UtcNow, null, null, null);
+                state = new DkimEntityState(domain, 1, DkimState.Created, DateTime.UtcNow, null, null, null);
                 await _dao.Save(state);
-
-                _dispatcher.Dispatch(new DkimEntityCreated(id, state.Version), _config.SnsTopicArn);
-                _log.LogInformation("Created DkimEntity for {Id}.", id);
+                _log.LogInformation($"Created DkimEntity for {domain}.");
             }
+
+            _dispatcher.Dispatch(new DkimEntityCreated(domain, state.Version), _config.SnsTopicArn);
+            _log.LogInformation($"Published DkimEntityCreated for stale DkimEntity {domain}.");
         }
 
         public async Task Handle(DomainDeleted message)
         {
-            await _dao.Delete(message.Id);
-            _log.LogInformation($"Deleted SPF entity with id: {message.Id}.");
+            string domain = message.Id.ToLower();
+            int rows = await _dao.Delete(domain);
+            if (rows == 1)
+            {
+                _log.LogInformation($"Deleted DkimEntity for: {domain}.");
+            }
+            else
+            {
+                _log.LogInformation($"DkimEntity already deleted for: {domain}.");
+            }
         }
-
 
         public async Task Handle(DkimSelectorsSeen message)
         {
             string id = message.Id.ToLower();
+            DkimEntityState state = await _dao.Get(id);
 
-            DkimEntityState state = await LoadDkimState(id, message.Timestamp, nameof(DkimSelectorsSeen));
-
+            if (state == null)
+            {
+                _log.LogInformation($"Dkim entity state does not exist for the domain: {id}");
+                return;
+            }
+            
             if (!state.CanUpdate(nameof(DkimSelectorsSeen).ToLower(), message.Timestamp))
             {
                 _log.LogInformation($"Cannot handle event DkimSelectorsSeen as newer state exists for {id}.");
@@ -166,8 +171,6 @@ namespace MailCheck.Dkim.Entity.Entity
             DkimEntityState state = await _dao.Get(id);
             if (state == null)
             {
-                _dispatcher.Dispatch(new DomainMissing(id), _config.SnsTopicArn);
-                _log.LogError("DomainMissing dispatched as DkimEntity does not exist for {Id}.", id);
                 _log.LogError("Ignoring {EventName} as DkimEntity does not exist for {Id}.", messageType, id);
                 throw new MailCheckException($"Cannot handle event {messageType} as DkimEntity doesnt exists for {id}.");
             }

@@ -1,5 +1,6 @@
 ﻿using Amazon.SimpleNotificationService;
 using Amazon.SimpleSystemsManagement;
+using MailCheck.Common.Data;
 using MailCheck.Common.Data.Abstractions;
 using MailCheck.Common.Data.Implementations;
 using MailCheck.Common.Environment;
@@ -16,7 +17,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace MailCheck.Dkim.Scheduler.Startup
 {
-    public class StartupDkimDomainCreated : IStartUp
+    public class StartupDkimSqsScheduler : IStartUp
     {
         public void ConfigureServices(IServiceCollection services)
         {
@@ -36,10 +37,11 @@ namespace MailCheck.Dkim.Scheduler.Startup
             services
                 .AddTransient<IConnectionInfoAsync, MySqlEnvironmentParameterStoreConnectionInfoAsync>()
                 .AddSingleton<IAmazonSimpleSystemsManagement, CachingAmazonSimpleSystemsManagementClient>()
-                .AddTransient<IHandle<DkimEntityCreated>, DkimSchedulerHandler>()
+                .AddTransient<DkimSchedulerHandler>()
                 .AddTransient<IDkimSchedulerDao, DkimSchedulerDao>()
                 .AddTransient<IDkimSchedulerConfig, DkimSchedulerConfig>()
                 .AddTransient<IAmazonSimpleNotificationService, AmazonSimpleNotificationServiceClient>()
+                .AddSingleton<IDatabase, DefaultDatabase<MySqlProvider>>()
                 .AddEnvironment();
         }
     }

@@ -1,69 +1,59 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MailCheck.Common.Data.Abstractions;
 using MailCheck.Dkim.Scheduler.Config;
 using MailCheck.Dkim.Scheduler.Dao.Model;
-using MySql.Data.MySqlClient;
-using MailCheck.Common.Data.Util;
-using MySqlHelper = MailCheck.Common.Data.Util.MySqlHelper;
+using MailCheck.Common.Util;
+using MailCheck.Common.Data;
+using Dapper;
+using System;
 
 namespace MailCheck.Dkim.Scheduler.Dao
 {
     public interface IDkimPeriodicSchedulerDao
     {
-        Task UpdateLastChecked(List<DkimSchedulerState> entitiesToUpdate);
+        Task UpdateLastChecked(IEnumerable<DkimSchedulerState> entitiesToUpdate);
         Task<List<DkimSchedulerState>> GetDkimRecordsToUpdate();
     }
-
+    
     public class DkimPeriodicSchedulerDao : IDkimPeriodicSchedulerDao
     {
-        private readonly IConnectionInfoAsync _connectionInfo;
+        private readonly IDatabase _database;
+        private readonly IClock _clock;
         private readonly IDkimSchedulerConfig _config;
 
-        public DkimPeriodicSchedulerDao(IConnectionInfoAsync connectionInfo,
-            IDkimSchedulerConfig config)
+        public DkimPeriodicSchedulerDao(IDatabase database,
+            IDkimSchedulerConfig config, IClock clock)
         {
-            _connectionInfo = connectionInfo;
+            _database = database;
             _config = config;
+            _clock = clock;
         }
 
-        public async Task UpdateLastChecked(List<DkimSchedulerState> entitiesToUpdate)
+        public async Task UpdateLastChecked(IEnumerable<DkimSchedulerState> entitiesToUpdate)
         {
-            string connectionString = await _connectionInfo.GetConnectionStringAsync();
-
-            string query = string.Format(DkimPeriodicSchedulerDaoResources.UpdateDkimRecordsLastChecked,
-                string.Join(',', entitiesToUpdate.Select((_, i) => $"@domainName{i}")));
-
-            MySqlParameter[] parameters =
-                entitiesToUpdate.Select((v, i) => new MySqlParameter($"domainName{i}", v.Id.ToLower())).ToArray();
-
-            await MySqlHelper.ExecuteNonQueryAsync(connectionString,
-                query,
-                parameters);
+            using (var connection = await _database.CreateAndOpenConnectionAsync())
+            {
+                var parameters = entitiesToUpdate.Select(ent => new { id = ent.Id, lastChecked = GetAdjustedLastCheckedTime() }).ToArray();
+                await connection.ExecuteAsync(DkimPeriodicSchedulerDaoResources.UpdateDkimRecordsLastCheckedDistributed, parameters);
+            }
         }
 
         public async Task<List<DkimSchedulerState>> GetDkimRecordsToUpdate()
         {
-            string connectionString = await _connectionInfo.GetConnectionStringAsync();
-
-            MySqlParameter[] parameters =
+            DateTime nowMinusInterval = _clock.GetDateTimeUtc().AddSeconds(-_config.RefreshIntervalSeconds);
+            using (var connection = await _database.CreateAndOpenConnectionAsync())
             {
-                new MySqlParameter("refreshIntervalSeconds", _config.RefreshIntervalSeconds),
-                new MySqlParameter("limit", _config.DomainsLimit),
-            };
+                var records = (await connection.QueryAsync<string>(DkimPeriodicSchedulerDaoResources.SelectDkimRecordsToSchedule,
+                    new {now_minus_interval = nowMinusInterval, limit = _config.DomainsLimit})).ToList();
 
-            List<DkimSchedulerState> dkimStates = new List<DkimSchedulerState>();
-            using (var reader = await MySqlHelper.ExecuteReaderAsync(connectionString,
-                DkimPeriodicSchedulerDaoResources.SelectDkimRecordsToSchedule, parameters))
-            {
-                while (await reader.ReadAsync())
-                {
-                    dkimStates.Add(new DkimSchedulerState(reader.GetString("id")));
-                }
+                return records.Select(record => new DkimSchedulerState(record)).ToList();
             }
+        }
 
-            return dkimStates;
+        private DateTime GetAdjustedLastCheckedTime()
+        {
+            return _clock.GetDateTimeUtc().AddSeconds(-(new Random().NextDouble() * 3600));
         }
     }
 }

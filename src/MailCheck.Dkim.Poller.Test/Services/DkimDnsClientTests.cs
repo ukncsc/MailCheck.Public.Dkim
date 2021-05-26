@@ -8,6 +8,7 @@ using DnsClient.Protocol;
 using FakeItEasy;
 using MailCheck.Dkim.Contracts.Poller;
 using MailCheck.Dkim.Poller.Services;
+using MailCheck.Dkim.Poller.Dns;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
@@ -36,10 +37,10 @@ namespace MailCheck.Dkim.Poller.Test.Services
         {
             A.CallTo(_lookupClient).Throws(new Exception("Invalid domain name"));
 
-            List<DkimSelectorRecords> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string>() { "selector1" });
+            List<DnsResult<DkimSelectorRecords>> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
 
-            Assert.That(response[0].Records, Is.Empty);
-            Assert.AreEqual(response[0].Error, "Invalid domain name");
+            Assert.That(response[0].Value.Records, Is.Empty);
+            Assert.AreEqual(response[0].Value.Error, "Invalid domain name");
         }
 
         [Test]
@@ -53,12 +54,12 @@ namespace MailCheck.Dkim.Poller.Test.Services
             A.CallTo(() => _lookupClient.QueryAsync(A<string>._, QueryType.TXT, A<QueryClass>._, A<CancellationToken>._))
                 .Returns(Task.FromResult(_dnsResponse));
 
-            List<DkimSelectorRecords> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
+            List<DnsResult<DkimSelectorRecords>> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
 
-            Assert.AreEqual(response[0].Records[0].Record, "record1");
-            Assert.That(response[0].Records[0].RecordParts.SequenceEqual(record1), Is.True);
-            Assert.AreEqual(response[0].Records[1].Record, "record2-part1 record2-part2");
-            Assert.That(response[0].Records[1].RecordParts.SequenceEqual(record2), Is.True);
+            Assert.AreEqual(response[0].Value.Records[0].Record, "record1");
+            Assert.That(response[0].Value.Records[0].RecordParts.SequenceEqual(record1), Is.True);
+            Assert.AreEqual(response[0].Value.Records[1].Record, "record2-part1 record2-part2");
+            Assert.That(response[0].Value.Records[1].RecordParts.SequenceEqual(record2), Is.True);
             Assert.That(response[0].Error, Is.Null);
         }
 
@@ -71,9 +72,9 @@ namespace MailCheck.Dkim.Poller.Test.Services
             A.CallTo(() => _lookupClient.QueryAsync(A<string>._, QueryType.TXT, A<QueryClass>._, A<CancellationToken>._))
                 .Returns(Task.FromResult(_dnsResponse));
 
-            List<DkimSelectorRecords> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
+            List<DnsResult<DkimSelectorRecords>> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
 
-            Assert.AreEqual(response[0].Records.Count, 0);
+            Assert.AreEqual(response[0].Value.Records.Count, 0);
             Assert.That(response[0].Error, Is.Null);
         }
 
@@ -86,10 +87,9 @@ namespace MailCheck.Dkim.Poller.Test.Services
             A.CallTo(() => _lookupClient.QueryAsync(A<string>._, QueryType.TXT, A<QueryClass>._, A<CancellationToken>._))
                 .Returns(Task.FromResult(_dnsResponse));
 
-            List<DkimSelectorRecords> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
+            List<DnsResult<DkimSelectorRecords>> response = await _client.FetchDkimRecords("ncsc.gov.uk", new List<string> { "selector1" });
 
-            Assert.That(response[0].Records, Is.Empty);
-            StringAssert.StartsWith("DNS TXT record lookup for ", response[0].Error);
+            Assert.That(response[0].Value.Records, Is.Empty);
         }
 
 

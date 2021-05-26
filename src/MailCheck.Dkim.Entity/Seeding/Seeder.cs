@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MailCheck.Common.Contracts.Messaging;
 using MailCheck.Common.Messaging.Abstractions;
 using MailCheck.Common.Util;
-using MailCheck.Dkim.Contracts.External;
 
 namespace MailCheck.Dkim.Entity.Seeding
 {

@@ -34,11 +34,12 @@ namespace MailCheck.Dkim.Evaluator.Parsers
 
         public DkimRecord Parse(DnsRecord record)
         {
-            string[] stringTags = record.Record.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
+            List<string> stringTags = record.Record.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(_ => _.Trim())
-                .ToArray();
+                .Where(_ => _ != string.Empty)
+                .ToList();
 
-            EvaluationResult<List<Tag>> evaluatedTags = _tagParser.Parse(stringTags.ToList());
+            EvaluationResult<List<Tag>> evaluatedTags = _tagParser.Parse(stringTags);
 
             List<Tag> implicitTags = _implicitProvider.GetImplicitValues(evaluatedTags.Item);
 

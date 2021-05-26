@@ -23,7 +23,7 @@ namespace MailCheck.Dkim.Scheduler
 
                 command.OnExecute(async () =>
                 {
-                    DkimSelectorUpdateEventLambdaEntryPoint selectorUpdateEventLambdaEntryPoint = new DkimSelectorUpdateEventLambdaEntryPoint();
+                    DkimSqsSchedulerLambdaEntryPoint selectorUpdateEventLambdaEntryPoint = new DkimSqsSchedulerLambdaEntryPoint();
                     DkimPeriodicSchedulerLambdaEntryPoint periodicSchedulerLambdaEntryPoint = new DkimPeriodicSchedulerLambdaEntryPoint();
 
                     while (true)
@@ -83,8 +83,6 @@ namespace MailCheck.Dkim.Scheduler
 
                         Thread.Sleep(10000);
                     }
-
-                    return 0;
                 });
 
             }, false);

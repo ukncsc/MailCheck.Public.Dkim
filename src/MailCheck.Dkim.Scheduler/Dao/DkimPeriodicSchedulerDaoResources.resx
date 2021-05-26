@@ -120,13 +120,13 @@
   <data name="SelectDkimRecordsToSchedule" xml:space="preserve">
     <value>SELECT id
 FROM dkim_scheduled_records
-WHERE UTC_TIMESTAMP() &gt; DATE_ADD(last_checked, INTERVAL @refreshIntervalSeconds SECOND) 
+WHERE @now_minus_interval &gt; last_checked 
 ORDER BY id, last_checked
 LIMIT @limit;</value>
   </data>
-  <data name="UpdateDkimRecordsLastChecked" xml:space="preserve">
+  <data name="UpdateDkimRecordsLastCheckedDistributed" xml:space="preserve">
     <value>UPDATE dkim_scheduled_records
-SET last_checked = UTC_TIMESTAMP() 
-WHERE LOWER(id) IN ({0});</value>
+SET last_checked = @lastChecked 
+WHERE id = @id;</value>
   </data>
 </root>

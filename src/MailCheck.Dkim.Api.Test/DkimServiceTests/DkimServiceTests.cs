@@ -8,6 +8,7 @@ using MailCheck.Dkim.Api.Config;
 using MailCheck.Dkim.Api.Dao;
 using MailCheck.Dkim.Api.Domain;
 using MailCheck.Dkim.Api.Service;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
 namespace MailCheck.Dkim.Api.Test.DkimServiceTests
@@ -19,7 +20,7 @@ namespace MailCheck.Dkim.Api.Test.DkimServiceTests
         private IMessagePublisher _messagePublisher;
         private IDkimApiDao _dao;
         private IDkimApiConfig _config;
-        private IClock _clock;
+        private ILogger<DkimService> _log;
 
         [SetUp]
         public void SetUp()
@@ -27,8 +28,8 @@ namespace MailCheck.Dkim.Api.Test.DkimServiceTests
             _messagePublisher = A.Fake<IMessagePublisher>();
             _dao = A.Fake<IDkimApiDao>();
             _config = A.Fake<IDkimApiConfig>();
-            _clock = A.Fake<IClock>();
-            _dkimService = new DkimService(_messagePublisher, _dao, _config, _clock);
+            _log = A.Fake<ILogger<DkimService>>();
+            _dkimService = new DkimService(_messagePublisher, _dao, _config, _log);
         }
 
         [Test]
@@ -45,33 +46,16 @@ namespace MailCheck.Dkim.Api.Test.DkimServiceTests
         }
 
         [Test]
-        public async Task PublishesDomainMissingMessageWhenDomainExistsButRecordsNeverUpdated()
-        {
-            EntityDkimEntityState dkimInfoResponse = GetEntityDkimEntityState(null);
-
-            A.CallTo(() => _dao.GetDkimSelectors("testDomain"))
-                .Returns(Task.FromResult(dkimInfoResponse));
-
-            EntityDkimEntityState result = await _dkimService.GetDkimForDomain("testDomain");
-
-            A.CallTo(() => _messagePublisher.Publish(A<DomainMissing>._, A<string>._))
-                .MustHaveHappenedOnceExactly();
-            Assert.AreSame(dkimInfoResponse, result);
-        }
-
-
-        [Test]
-        public async Task PublishesDomainMissingMessageWhenDomainExistsAndRecordsStale()
+        public async Task DoesNotPublishDomainMissingMessageWhenDomainExistsAndRecordsStale()
         {
             EntityDkimEntityState dkimInfoResponse = GetEntityDkimEntityState(DateTime.UnixEpoch.AddDays(-2));
 
-            A.CallTo(() => _clock.GetDateTimeUtc()).Returns(DateTime.UnixEpoch);
             A.CallTo(() => _dao.GetDkimSelectors("testDomain")).Returns(Task.FromResult(dkimInfoResponse));
 
             EntityDkimEntityState result = await _dkimService.GetDkimForDomain("testDomain");
 
             A.CallTo(() => _messagePublisher.Publish(A<DomainMissing>._, A<string>._))
-                .MustHaveHappenedOnceExactly();
+                .MustNotHaveHappened();
             Assert.AreSame(dkimInfoResponse, result);
         }
 
@@ -80,7 +64,6 @@ namespace MailCheck.Dkim.Api.Test.DkimServiceTests
         {
             EntityDkimEntityState dkimInfoResponse = GetEntityDkimEntityState(DateTime.UnixEpoch.AddDays(-2).AddTicks(1));
 
-            A.CallTo(() => _clock.GetDateTimeUtc()).Returns(DateTime.UnixEpoch);
             A.CallTo(() => _dao.GetDkimSelectors("testDomain")).Returns(Task.FromResult(dkimInfoResponse));
 
             EntityDkimEntityState result = await _dkimService.GetDkimForDomain("testDomain");

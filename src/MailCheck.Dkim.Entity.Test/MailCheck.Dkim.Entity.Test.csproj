@@ -8,8 +8,9 @@
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.8.0" />
     <PackageReference Include="FakeItEasy" Version="5.0.1" />
-    <PackageReference Include="MailCheck.Common.TestSupport" Version="1.4.1.48" />
-    <PackageReference Include="MailCheck.DomainStatus.Contracts" Version="0.0.1.52" />
+    <PackageReference Include="MailCheck.Common.Contracts" Version="5.1.0" />
+    <PackageReference Include="MailCheck.Common.TestSupport" Version="5.1.0" />
+    <PackageReference Include="MailCheck.DomainStatus.Contracts" Version="0.0.2.126" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.12.0" />
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />

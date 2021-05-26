@@ -43,7 +43,31 @@ namespace MailCheck.Dkim.Entity.Entity.Notifiers
                     DkimAdvisoryRemoved dkimAdvisoryRemoved = new DkimAdvisoryRemoved(state.Id, removedMessages);
                     _dispatcher.Dispatch(dkimAdvisoryRemoved, _dkimEntityConfig.SnsTopicArn);
                 }
+
+                List<SelectorMessages> sustainedMessages = CreateIntersectionSelectorMessages(currentSelectorMessages, newSelectorMessages);
+
+                if (sustainedMessages.Any())
+                {
+                    DkimAdvisorySustained dkimAdvisorySustained = new DkimAdvisorySustained(state.Id, sustainedMessages);
+                    _dispatcher.Dispatch(dkimAdvisorySustained, _dkimEntityConfig.SnsTopicArn);
+                }
             }
+        }
+
+        private List<SelectorMessages> CreateExclusiveSelectorMessages(IEnumerable<SelectorMessage> first, IEnumerable<SelectorMessage> second)
+        {
+            return first
+                .Except(second, _selectorMessageEqualityComparer)
+                .GroupUpSelectorMessages()
+                .ToList();
+        }
+
+        private List<SelectorMessages> CreateIntersectionSelectorMessages(IEnumerable<SelectorMessage> first, IEnumerable<SelectorMessage> second)
+        {
+            return first
+                .Intersect(second, _selectorMessageEqualityComparer)
+                .GroupUpSelectorMessages()
+                .ToList();
         }
 
         private List<SelectorMessage> CreateFlattenedSelectorMessages(IEnumerable<DkimSelector> dkimSelectors)
@@ -53,14 +77,15 @@ namespace MailCheck.Dkim.Entity.Entity.Notifiers
                 .SelectMany(x => x.EvaluationMessages ?? new List<Message>(), (x, y) => new SelectorMessage(x.Selector, y))
                 .ToList();
         }
+    }
 
-        private List<SelectorMessages> CreateExclusiveSelectorMessages(IEnumerable<SelectorMessage> first, IEnumerable<SelectorMessage> second)
+    public static class SelectorMessageEnumerableExtensions
+    {
+        public static IEnumerable<SelectorMessages> GroupUpSelectorMessages(this IEnumerable<SelectorMessage> subject)
         {
-            return first
-                .Except(second, _selectorMessageEqualityComparer)
+            return subject
                 .GroupBy(x => x.Selector, y => y.Message)
-                .Select(x => new SelectorMessages(x.Key, x.Select(y => new AdvisoryMessage((Notifications.MessageType)y.MessageType, y.Text)).ToList()))
-                .ToList();
+                .Select(x => new SelectorMessages(x.Key, x.Select(y => new AdvisoryMessage((Notifications.MessageType)y.MessageType, y.Text)).ToList()));
         }
     }
 }

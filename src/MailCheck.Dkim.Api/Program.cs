@@ -19,7 +19,7 @@ namespace MailCheck.Dkim.Api
 
             if (RunInDevMode())
             {
-                webHostBuilder.UseUrls("http://localhost:5004");
+                webHostBuilder.UseUrls("http://+:5004");
             }
 
             return webHostBuilder;

@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Dapper;
+using MailCheck.Common.Data;
 using MailCheck.Common.Data.Abstractions;
 using MailCheck.Dkim.Scheduler.Dao.Model;
 using MySql.Data.MySqlClient;
@@ -11,51 +15,53 @@ namespace MailCheck.Dkim.Scheduler.Dao
     {
         Task<DkimSchedulerState> Get(string domain);
         Task Save(DkimSchedulerState schedulerState);
-        Task Delete(string domain);
+        Task<int> Delete(string domain);
     }
 
     public class DkimSchedulerDao : IDkimSchedulerDao
     {
-        private readonly IConnectionInfoAsync _connectionInfo;
+        private readonly IDatabase _database;
+        
 
-        public DkimSchedulerDao(IConnectionInfoAsync connectionInfo)
+        public DkimSchedulerDao(IDatabase database)
         {
-            _connectionInfo = connectionInfo;
+            _database = database;
         }
 
         public async Task<DkimSchedulerState> Get(string domain)
         {
-            string connectionString = await _connectionInfo.GetConnectionStringAsync();
-
-            string id = (string)await MySqlHelper.ExecuteScalarAsync(connectionString, DkimSchedulerDaoResources.SelectDkimRecord,
-                new MySqlParameter("domain", domain));
-
-            return id == null
-                ? null
-                : new DkimSchedulerState(id);
+            using (var connection = await _database.CreateAndOpenConnectionAsync())
+            {
+                string id = await connection.QueryFirstOrDefaultAsync<string>(
+                    DkimSchedulerDaoResources.SelectDkimRecord, new {domain});
+                
+                return id == null
+                    ? null
+                    : new DkimSchedulerState(id);
+            }
         }
 
         public async Task Save(DkimSchedulerState state)
         {
-            string connectionString = await _connectionInfo.GetConnectionStringAsync();
-
-            int numberOfRowsAffected = await MySqlHelper.ExecuteNonQueryAsync(connectionString,
-                DkimSchedulerDaoResources.InsertOrUpdateRecord,
-                new MySqlParameter("domain", state.Id.ToLower()));
-
-            if (numberOfRowsAffected == 0)
+            using (var connection = await _database.CreateAndOpenConnectionAsync())
             {
-                throw new InvalidOperationException($"Didn't save duplicate {nameof(DkimSchedulerState)} for {state.Id}");
+                int numberOfRowsAffected = await connection.ExecuteAsync(DkimSchedulerDaoResources.InsertOrUpdateRecord,
+                    new {domain = state.Id.ToLower()});
+                
+                if (numberOfRowsAffected == 0)
+                {
+                    throw new InvalidOperationException($"Didn't save duplicate {nameof(DkimSchedulerState)} for {state.Id}");
+                }
             }
         }
 
-        public async Task Delete(string domain)
+        public async Task<int> Delete(string domain)
         {
-            string connectionString = await _connectionInfo.GetConnectionStringAsync();
-
-            await MySqlHelper.ExecuteNonQueryAsync(connectionString,
-                DkimSchedulerDaoResources.DeleteDkimRecord,
-                new MySqlParameter("id", domain));
+            using (var connection = await _database.CreateAndOpenConnectionAsync())
+            {
+                return await connection.ExecuteAsync(DkimSchedulerDaoResources.DeleteDkimRecord,
+                    new { id = domain });
+            }
         }
     }
 }

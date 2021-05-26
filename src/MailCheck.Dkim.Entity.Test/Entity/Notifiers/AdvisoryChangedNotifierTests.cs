@@ -33,7 +33,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
         }
 
         [Test]
-        public void DoesNotNotifyWhenNoChanges()
+        public void RaisesAdvisorySustainedOnlyWhenNoChange()
         {
             Guid Id1 = Guid.NewGuid();
             Guid Id2 = Guid.NewGuid();
@@ -58,11 +58,19 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 
             _advisoryChangedNotifier.Handle(oldState, newRecord);
 
-            A.CallTo(() => _messageDispatcher.Dispatch(A<Common.Messaging.Abstractions.Message>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappened();
+
+            A.CallTo(() =>
+                _messageDispatcher.Dispatch(
+                    A<DkimAdvisorySustained>.That.Matches(x =>
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
-        public void DoesNotNotifyWhenNewSelectorHasNoRecord()
+        public void RaisesAdvisorySustainedOnlyWhenNewSelectorHasNoRecord()
         {
             Guid Id = Guid.NewGuid();
 
@@ -86,11 +94,19 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 
             _advisoryChangedNotifier.Handle(oldState, newRecord);
 
-            A.CallTo(() => _messageDispatcher.Dispatch(A<Common.Messaging.Abstractions.Message>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappened();
+
+            A.CallTo(() =>
+                _messageDispatcher.Dispatch(
+                    A<DkimAdvisorySustained>.That.Matches(x =>
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
-        public void NotifiesWhenMessageChanges()
+        public void RaisesAdvisorySustainedAndAddAdvisoryWhenMessageChanges()
         {
             Guid Id1 = Guid.NewGuid();
             
@@ -116,6 +132,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappened();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
@@ -131,7 +148,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
         }
 
         [Test]
-        public void NotifiesWhenMessageRemoved()
+        public void RaisesAdvisorySustainedAndReoveAdvisoryWhenMessageChanges()
         {
             Guid Id1 = Guid.NewGuid();
             
@@ -156,16 +173,23 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustNotHaveHappened();
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryRemoved>.That.Matches(x =>
                         x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 2"), A<string>._)).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() =>
+                _messageDispatcher.Dispatch(
+                    A<DkimAdvisorySustained>.That.Matches(x =>
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
-        public void NotifiesWhenMessageAdded()
+        public void RaisesAdvisorySustainedAndAddAdvisoryWhenMessageAdded()
         {
             Guid Id1 = Guid.NewGuid();
             
@@ -190,6 +214,13 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() =>
+                _messageDispatcher.Dispatch(
+                    A<DkimAdvisorySustained>.That.Matches(x => 
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
@@ -199,7 +230,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
         }
 
         [Test]
-        public void NotifiesWhenSelectorAdded()
+        public void RaisesAdvisorySustainedAndAddAdvisoryWhenSelectorAdded()
         {
             Guid Id1 = Guid.NewGuid();
             
@@ -227,16 +258,23 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryAdded>.That.Matches(x =>
                         x.SelectorMessages[0].Selector == "selector2" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 2 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() =>
+                _messageDispatcher.Dispatch(
+                    A<DkimAdvisorySustained>.That.Matches(x =>
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
-        public void NotifiesWhenSelectorRemoved()
+        public void RaisesAdvisorySustainedAndAddAdvisoryWhenSelectorRemoved()
         {
             Guid Id1 = Guid.NewGuid();
 
@@ -264,12 +302,67 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryRemoved>.That.Matches(x =>
                         x.SelectorMessages[0].Selector == "selector2" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 2 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() =>
+                _messageDispatcher.Dispatch(
+                    A<DkimAdvisorySustained>.That.Matches(x =>
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Test]
+        public void NoDkimAdvisorySustainedWhenChangeHasHappened()
+        {
+            Guid Id1 = Guid.NewGuid();
+
+            DkimEntityState oldState = new DkimEntityState("", 0, DkimState.PollPending, DateTime.MinValue,
+                DateTime.MinValue, DateTime.MaxValue, new List<DkimSelector>
+                {
+                    CreateDkimSelector("selector2", new List<Message>
+                    {
+                        new Message(Guid.NewGuid(), "selector 2 record 1 message 1", string.Empty, MessageType.Info)
+                    })
+                });
+
+            DkimRecordEvaluationResult newRecord = new DkimRecordEvaluationResult(null, new List<DkimSelectorResult>
+            {
+                CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
+                {
+                    new DkimEvaluatorMessage(Id1, EvaluationErrorType.Info, "selector 1 record 1 message 1",
+                        string.Empty)
+                })
+            });
+
+            _advisoryChangedNotifier.Handle(oldState, newRecord);
+
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustNotHaveHappened();
+
+            A.CallTo(() =>
+                    _messageDispatcher.Dispatch(
+                        A<DkimAdvisoryAdded>.That.Matches(x =>
+                            x.SelectorMessages[0].Selector == "selector1" &&
+                            (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                            x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            A.CallTo(() =>
+                    _messageDispatcher.Dispatch(
+                        A<DkimAdvisoryRemoved>.That.Matches(x =>
+                            x.SelectorMessages[0].Selector == "selector2" &&
+                            (MessageType) x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                            x.SelectorMessages[0].Messages[0].Text == "selector 2 record 1 message 1"), A<string>._))
+                .MustHaveHappenedOnceExactly();
         }
 
         private DkimSelector CreateDkimSelector(string selector, List<Message> messages)

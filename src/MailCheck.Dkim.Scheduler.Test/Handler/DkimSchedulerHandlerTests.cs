@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FakeItEasy;
+using MailCheck.Common.Contracts.Messaging;
 using MailCheck.Dkim.Contracts.Entity;
-using MailCheck.Dkim.Contracts.External;
 using MailCheck.Dkim.Scheduler.Dao;
 using MailCheck.Dkim.Scheduler.Dao.Model;
 using MailCheck.Dkim.Scheduler.Handler;

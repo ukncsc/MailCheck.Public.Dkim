@@ -47,12 +47,21 @@ namespace MailCheck.Dkim.Poller.StartUp
 
         private static ILookupClient CreateLookupClient(IServiceProvider provider)
         {
-            return new LookupClient(provider.GetService<IDnsNameServerProvider>().GetNameServers()
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? new LookupClient(NameServer.GooglePublicDns, NameServer.GooglePublicDnsIPv6)
+                {
+                    Timeout = provider.GetRequiredService<IDkimPollerConfig>().DnsRecordLookupTimeout
+                }
+                : new LookupClient(new LookupClientOptions(provider.GetService<IDnsNameServerProvider>()
+                    .GetNameServers()
                     .Select(_ => new IPEndPoint(_, 53)).ToArray())
                 {
-                    Timeout = provider.GetRequiredService<IDkimPollerConfig>().DnsRecordLookupTimeout,
+                    ContinueOnEmptyResponse = false,
+                    UseCache = false,
                     UseTcpOnly = true,
-                };
+                    EnableAuditTrail = true,
+                    Timeout = provider.GetRequiredService<IDkimPollerConfig>().DnsRecordLookupTimeout
+                });
         }
     }
 }

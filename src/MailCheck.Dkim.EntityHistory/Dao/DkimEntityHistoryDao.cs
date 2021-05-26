@@ -46,7 +46,7 @@ namespace MailCheck.Dkim.EntityHistory.Dao
 
             await MySqlHelper.ExecuteNonQueryAsync(connectionString,
                 DkimEntityHistoryDaoResouces.InsertDkimEntityHistory,
-                new MySqlParameter("domain", state.Id),
+                new MySqlParameter("domain", state.Id.ToLower()),
                 new MySqlParameter("state", serializedState));
         }
     }

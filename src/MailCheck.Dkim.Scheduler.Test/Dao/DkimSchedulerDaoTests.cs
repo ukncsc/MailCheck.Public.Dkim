@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FakeItEasy;
+using MailCheck.Common.Data;
 using MailCheck.Common.Data.Abstractions;
 using MailCheck.Common.TestSupport;
 using MailCheck.Dkim.Migration;
@@ -21,24 +22,22 @@ namespace MailCheck.Dkim.Scheduler.Test.Dao
     public class DkimSchedulerDaoTests : DatabaseTestBase
     {
         private IDkimSchedulerDao _dkimSchedulerDao;
-        private IConnectionInfoAsync _connectionInfoAsync;
         private IDkimSchedulerConfig _config;
+        private IDatabase _database;
 
         [SetUp]
         protected override void SetUp()
         {
             base.SetUp();
 
-            _connectionInfoAsync = A.Fake<IConnectionInfoAsync>();
-
             _config = A.Fake<IDkimSchedulerConfig>();
+            _database = A.Fake<IDatabase>();
 
             A.CallTo(() => _config.RefreshIntervalSeconds).Returns(86400);
             A.CallTo(() => _config.DomainsLimit).Returns(10);
-            A.CallTo(() => _connectionInfoAsync.GetConnectionStringAsync()).Returns(ConnectionString);
 
             _dkimSchedulerDao =
-                new DkimSchedulerDao(_connectionInfoAsync);
+                new DkimSchedulerDao(_database);
         }
 
         [Test]

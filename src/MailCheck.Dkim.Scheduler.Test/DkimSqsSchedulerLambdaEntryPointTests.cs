@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace MailCheck.Dkim.Scheduler.Test
 {
     [TestFixture(Category = "Integration")]
-    public class DkimSelectorUpdateEventLambdaEntryPointTests
+    public class DkimSqsSchedulerLambdaEntryPointTests
     {
         [Test]
         public void CreateDkimSelectorUpdateEventLambdaEntryPoint()
@@ -16,7 +16,7 @@ namespace MailCheck.Dkim.Scheduler.Test
             Environment.SetEnvironmentVariable("AWS_SECRET_ACCESS_KEY", "50");
             Environment.SetEnvironmentVariable("AWS_SESSION_TOKEN", "50");
 
-            DkimSelectorUpdateEventLambdaEntryPoint entryPoint = new DkimSelectorUpdateEventLambdaEntryPoint();
+            DkimSqsSchedulerLambdaEntryPoint entryPoint = new DkimSqsSchedulerLambdaEntryPoint();
             Assert.That(entryPoint, Is.Not.Null);
         }
     }

@@ -1,11 +1,14 @@
 ﻿using Amazon.SimpleNotificationService;
 using Amazon.SimpleSystemsManagement;
+using MailCheck.Common.Data;
 using MailCheck.Common.Data.Abstractions;
 using MailCheck.Common.Data.Implementations;
 using MailCheck.Common.Environment;
+using MailCheck.Common.Environment.FeatureManagement;
 using MailCheck.Common.Messaging.Abstractions;
 using MailCheck.Common.Messaging.Sns;
 using MailCheck.Common.SSM;
+using MailCheck.Common.Util;
 using MailCheck.Dkim.Scheduler.Config;
 using MailCheck.Dkim.Scheduler.Dao;
 using MailCheck.Dkim.Scheduler.Processor;
@@ -36,13 +39,15 @@ namespace MailCheck.Dkim.Scheduler.Startup
             services
                 .AddSingleton<IAmazonSimpleSystemsManagement, CachingAmazonSimpleSystemsManagementClient>()
                 .AddTransient<IProcess, DkimPollSchedulerProcessor>()
-                .AddTransient<IDkimPeriodicSchedulerDao, DkimPeriodicSchedulerDao>()
                 .AddTransient<IDkimSchedulerConfig, DkimSchedulerConfig>()
                 .AddTransient<IMessagePublisher, SnsMessagePublisher>()
                 .AddEnvironment()
                 .AddTransient<IAmazonSimpleNotificationService, AmazonSimpleNotificationServiceClient>()
-                .AddTransient<IConnectionInfoAsync, MySqlEnvironmentParameterStoreConnectionInfoAsync>();
-
+                .AddTransient<IConnectionInfoAsync, MySqlEnvironmentParameterStoreConnectionInfoAsync>()
+                .AddSingleton<IDatabase, DefaultDatabase<MySqlProvider>>()
+                .AddTransient<IClock, Clock>()
+                .AddTransient<IDkimPeriodicSchedulerDao, DkimPeriodicSchedulerDao>();
+                
         }
     }
 }

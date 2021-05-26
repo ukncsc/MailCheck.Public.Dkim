@@ -13,7 +13,7 @@ namespace MailCheck.Dkim.Entity.Dao
     {
         Task<DkimEntityState> Get(string domain);
         Task Save(DkimEntityState state);
-        Task Delete(string domain);
+        Task<int> Delete(string domain);
     }
 
     public class DkimEntityDao : IDkimEntityDao
@@ -49,7 +49,7 @@ namespace MailCheck.Dkim.Entity.Dao
 
             int rowsAffected = await MySqlHelper.ExecuteNonQueryAsync(connectionString,
                 DkimEntityDaoResources.InsertDkimEntity,
-                new MySqlParameter("domain", state.Id),
+                new MySqlParameter("domain", state.Id.ToLower()),
                 new MySqlParameter("version", state.Version),
                 new MySqlParameter("state", serializedState));
 
@@ -60,11 +60,11 @@ namespace MailCheck.Dkim.Entity.Dao
             }
         }
 
-        public async Task Delete(string domain)
+        public async Task<int> Delete(string domain)
         {
             string connectionString = await _connectionInfoAsync.GetConnectionStringAsync();
 
-            await MySqlHelper.ExecuteNonQueryAsync(connectionString,
+            return await MySqlHelper.ExecuteNonQueryAsync(connectionString,
                 DkimEntityDaoResources.DeleteDkimEntity,
                 new MySqlParameter("domain", domain));
         }

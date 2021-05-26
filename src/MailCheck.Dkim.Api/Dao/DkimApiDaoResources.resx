@@ -125,7 +125,7 @@ WHERE id  = @domain</value>
   <data name="GetDkimResult" xml:space="preserve">
     <value>SELECT state
 FROM dkim_entity
-WHERE LOWER(id) = LOWER(@domain)
+WHERE id = @domain
 ORDER BY version DESC
 LIMIT 1;</value>
   </data>

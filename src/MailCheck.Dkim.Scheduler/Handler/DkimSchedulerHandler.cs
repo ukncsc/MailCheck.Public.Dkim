@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MailCheck.Common.Contracts.Messaging;
 using MailCheck.Common.Messaging.Abstractions;
 using MailCheck.Dkim.Contracts.Entity;
-using MailCheck.Dkim.Contracts.External;
 using MailCheck.Dkim.Scheduler.Dao;
 using MailCheck.Dkim.Scheduler.Dao.Model;
-using Microsoft.Extensions.Logging;
 
 namespace MailCheck.Dkim.Scheduler.Handler
 {
-    public class DkimSchedulerHandler : IHandle<DkimEntityCreated>
+    public class DkimSchedulerHandler : 
+        IHandle<DkimEntityCreated>,
+        IHandle<DomainDeleted>
     {
         private readonly IDkimSchedulerDao _dkimSchedulerDao;
         private readonly ILogger<DkimSchedulerHandler> _log;
@@ -22,30 +22,38 @@ namespace MailCheck.Dkim.Scheduler.Handler
             _log = log;
         }
 
-            public async Task Handle(DkimEntityCreated message)
+        public async Task Handle(DkimEntityCreated message)
+        {
+            string domain = message.Id.ToLower();
+            DkimSchedulerState state = await _dkimSchedulerDao.Get(domain);
+
+            if (state == null)
             {
-                string domain = message.Id.ToLower();
-                DkimSchedulerState state = await _dkimSchedulerDao.Get(domain);
+                state = new DkimSchedulerState(domain);
 
-                if (state == null)
-                {
-                    state = new DkimSchedulerState(domain);
+                await _dkimSchedulerDao.Save(state);
 
-                    await _dkimSchedulerDao.Save(state);
-
-                    _log.LogInformation($"{domain} added to DkimScheduler");
-                }
-                else
-                {
-                    _log.LogInformation($"{domain} already exists in DkimScheduler");
-                }
+                _log.LogInformation($"{domain} added to DkimScheduler");
             }
+            else
+            {
+                _log.LogInformation($"{domain} already exists in DkimScheduler");
+            }
+        }
 
         public async Task Handle(DomainDeleted message)
         {
             string domain = message.Id.ToLower();
-            await _dkimSchedulerDao.Delete(domain);
-            _log.LogInformation($"Deleted schedule for DKIM entity with id: {domain}.");
+            int rows = await _dkimSchedulerDao.Delete(domain);
+            if (rows == 1)
+            {
+                _log.LogInformation($"Deleted schedule for DKIM entity with id: {domain}.");
+            }
+            else
+            {
+                _log.LogInformation($"Schedule already deleted for DKIM entity with id: {domain}.");
+            }
+            
         }
     }
 }
