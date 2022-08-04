@@ -117,43 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidFalgTypeErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for flag type. Valid values are y and s.</value>
+  <data name="InvalidFlagTypeErrorMessage" xml:space="preserve">
+    <value>Selector {0}. Invalid value '{1}' for flag type. Valid values are y and s.</value>
   </data>
   <data name="InvalidFlagValueErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for t (flags tag). Flags should be a colon-separated list and can contain the following values: y, s</value>
+    <value>Selector {0}. Invalid value '{1}' for t (flags tag). Flags should be a colon-separated list and can contain the following values: y, s</value>
   </data>
   <data name="InvalidHashAlgorithmErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for h (hash algorithm tag). Hash algorithm should be a colon-separated list and can contain the following values: sha1, sha256</value>
+    <value>Selector {0}. Invalid value '{1}' for h (hash algorithm tag). Hash algorithm should be a colon-separated list and can contain the following values: sha1, sha256</value>
   </data>
   <data name="InvalidPublicKeyErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for p (public key data tag). Value must be a base64 string.)</value>
+    <value>Selector {0}. Invalid value '{1}' for p (public key data tag). Value must be a base64 string.</value>
   </data>
   <data name="InvalidPublicTypeErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for k (public key type) tag. Valid values are rsa or ed25519.</value>
+    <value>Selector {0}. Invalid value '{1}' for k (public key type) tag. Valid values are rsa or ed25519.</value>
   </data>
   <data name="InvalidServiceTypeErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for s (service type) tag. Valid values are email or *.</value>
+    <value>Selector {0}. Invalid value '{1}' for s (service type) tag. Valid values are email or *.</value>
   </data>
   <data name="InvalidVersionErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for v (version) tag. Value should be DKIM1.</value>
+    <value>Selector {0}. Invalid value '{1}' for v (version) tag. Value should be DKIM1.</value>
   </data>
   <data name="MoreThanMaxOccursErrorMessage" xml:space="preserve">
-    <value>The {0} tag should occur no more than {1}. This record has {2} occurrences.</value>
+    <value>Selector {0}. The {1} tag should occur no more than {2}. This record has {3} occurrences.</value>
+  </data>
+  <data name="NoteMessage" xml:space="preserve">
+    <value>Selector {0}. {1}.</value>
   </data>
   <data name="PublicKeyDataTagMustExistErrorMessage" xml:space="preserve">
-    <value>Record must contain a public key data tag.</value>
-  </data>
-  <data name="PublicKeyTypeTagMustExistErrorMessage" xml:space="preserve">
-    <value>Record must contain a valid public key type tag, key type found: {0}={1}.</value>
+    <value>Selector {0}. Record must contain a public key data tag.</value>
   </data>
   <data name="UnexpectedValueErrorMessage" xml:space="preserve">
     <value>Unexpected values {0} in {1} {2}.</value>
   </data>
   <data name="UnknownHashAlgorithmErrorMessage" xml:space="preserve">
-    <value>Invalid value '{0}' for hash algorithm. Valid values are sha1 and sha256.</value>
+    <value>Selector {0}. Invalid value '{1}' for hash algorithm. Valid values are sha1 and sha256.</value>
   </data>
   <data name="UnknownTagErrorMessage" xml:space="preserve">
-    <value>Unknown tag {0} with value {1}.</value>
+    <value>Selector {0}. Unknown tag {1} with value {2}.</value>
   </data>
 </root>

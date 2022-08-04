@@ -19,7 +19,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class DKimEvaluatorParsersResources {
@@ -61,16 +61,16 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for flag type. Valid values are y and s..
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for flag type. Valid values are y and s..
         /// </summary>
-        public static string InvalidFalgTypeErrorMessage {
+        public static string InvalidFlagTypeErrorMessage {
             get {
-                return ResourceManager.GetString("InvalidFalgTypeErrorMessage", resourceCulture);
+                return ResourceManager.GetString("InvalidFlagTypeErrorMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for t (flags tag). Flags should be a colon-separated list and can contain the following values: y, s.
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for t (flags tag). Flags should be a colon-separated list and can contain the following values: y, s.
         /// </summary>
         public static string InvalidFlagValueErrorMessage {
             get {
@@ -79,7 +79,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for h (hash algorithm tag). Hash algorithm should be a colon-separated list and can contain the following values: sha1, sha256.
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for h (hash algorithm tag). Hash algorithm should be a colon-separated list and can contain the following values: sha1, sha256.
         /// </summary>
         public static string InvalidHashAlgorithmErrorMessage {
             get {
@@ -88,7 +88,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for p (public key data tag). Value must be a base64 string.).
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for p (public key data tag). Value must be a base64 string..
         /// </summary>
         public static string InvalidPublicKeyErrorMessage {
             get {
@@ -97,7 +97,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for k (public key type) tag. Valid values are rsa or ed25519..
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for k (public key type) tag. Valid values are rsa or ed25519..
         /// </summary>
         public static string InvalidPublicTypeErrorMessage {
             get {
@@ -106,7 +106,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for s (service type) tag. Valid values are email or *..
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for s (service type) tag. Valid values are email or *..
         /// </summary>
         public static string InvalidServiceTypeErrorMessage {
             get {
@@ -115,7 +115,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for v (version) tag. Value should be DKIM1..
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for v (version) tag. Value should be DKIM1..
         /// </summary>
         public static string InvalidVersionErrorMessage {
             get {
@@ -124,7 +124,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} tag should occur no more than {1}. This record has {2} occurrences..
+        ///   Looks up a localized string similar to Selector {0}. The {1} tag should occur no more than {2}. This record has {3} occurrences..
         /// </summary>
         public static string MoreThanMaxOccursErrorMessage {
             get {
@@ -133,20 +133,20 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Record must contain a public key data tag..
+        ///   Looks up a localized string similar to Selector {0}. {1}..
         /// </summary>
-        public static string PublicKeyDataTagMustExistErrorMessage {
+        public static string NoteMessage {
             get {
-                return ResourceManager.GetString("PublicKeyDataTagMustExistErrorMessage", resourceCulture);
+                return ResourceManager.GetString("NoteMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Record must contain a valid public key type tag, key type found: {0}={1}..
+        ///   Looks up a localized string similar to Selector {0}. Record must contain a public key data tag..
         /// </summary>
-        public static string PublicKeyTypeTagMustExistErrorMessage {
+        public static string PublicKeyDataTagMustExistErrorMessage {
             get {
-                return ResourceManager.GetString("PublicKeyTypeTagMustExistErrorMessage", resourceCulture);
+                return ResourceManager.GetString("PublicKeyDataTagMustExistErrorMessage", resourceCulture);
             }
         }
         
@@ -160,7 +160,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for hash algorithm. Valid values are sha1 and sha256..
+        ///   Looks up a localized string similar to Selector {0}. Invalid value &apos;{1}&apos; for hash algorithm. Valid values are sha1 and sha256..
         /// </summary>
         public static string UnknownHashAlgorithmErrorMessage {
             get {
@@ -169,7 +169,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown tag {0} with value {1}..
+        ///   Looks up a localized string similar to Selector {0}. Unknown tag {1} with value {2}..
         /// </summary>
         public static string UnknownTagErrorMessage {
             get {

@@ -1,4 +1,6 @@
-﻿namespace MailCheck.Dkim.Entity.Entity.Notifications
+﻿using MailCheck.Dkim.Contracts.SharedDomain;
+
+namespace MailCheck.Dkim.Entity.Entity.Notifications
 {
     public class SelectorMessage
     {

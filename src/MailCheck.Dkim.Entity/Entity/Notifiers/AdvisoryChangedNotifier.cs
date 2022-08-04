@@ -2,9 +2,11 @@
 using System.Linq;
 using MailCheck.Common.Messaging.Abstractions;
 using MailCheck.Dkim.Contracts.Evaluator;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Config;
 using MailCheck.Dkim.Entity.Entity.Notifications;
 using MailCheck.Dkim.Entity.Mapping;
+using Message = MailCheck.Dkim.Contracts.SharedDomain.Message;
 
 namespace MailCheck.Dkim.Entity.Entity.Notifiers
 {
@@ -73,19 +75,9 @@ namespace MailCheck.Dkim.Entity.Entity.Notifiers
         private List<SelectorMessage> CreateFlattenedSelectorMessages(IEnumerable<DkimSelector> dkimSelectors)
         {
             return dkimSelectors
-                .SelectMany(x => x.Records ?? new List<DkimRecord>(), (y, z) => new { y.Selector, z.EvaluationMessages })
-                .SelectMany(x => x.EvaluationMessages ?? new List<Message>(), (x, y) => new SelectorMessage(x.Selector, y))
+                .SelectMany(x => x.Records ?? new List<DkimRecord>(), (y, z) => new { y.Selector, z.Messages })
+                .SelectMany(x => x.Messages ?? new List<Message>(), (x, y) => new SelectorMessage(x.Selector, y))
                 .ToList();
-        }
-    }
-
-    public static class SelectorMessageEnumerableExtensions
-    {
-        public static IEnumerable<SelectorMessages> GroupUpSelectorMessages(this IEnumerable<SelectorMessage> subject)
-        {
-            return subject
-                .GroupBy(x => x.Selector, y => y.Message)
-                .Select(x => new SelectorMessages(x.Key, x.Select(y => new AdvisoryMessage((Notifications.MessageType)y.MessageType, y.Text)).ToList()));
         }
     }
 }

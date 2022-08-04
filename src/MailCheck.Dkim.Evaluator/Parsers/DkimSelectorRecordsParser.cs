@@ -27,7 +27,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers
         private DkimSelectorRecords Parse(DkimSelector selector)
         {
             return new DkimSelectorRecords(new DkimSelector(selector.Selector, selector.CName, selector.Records, selector.PollError),
-                selector.Records.Select(_ => _dkimRecordParser.Parse(_.DnsRecord)).ToList());
+                selector.Records.Select(_ => _dkimRecordParser.Parse(selector.Selector, _.DnsRecord, selector.CName)).ToList());
         }
     }
 }

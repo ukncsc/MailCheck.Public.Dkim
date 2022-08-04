@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MailCheck.Dkim.Contracts.Entity;
 using MailCheck.Dkim.Contracts.Entity.Domain;
-using MailCheck.Dkim.Entity.Entity;
-using DkimSelector = MailCheck.Dkim.Entity.Entity.DkimSelector;
+using MailCheck.Dkim.Contracts.SharedDomain;
 
 namespace MailCheck.Dkim.Entity.Mapping
 {
@@ -31,7 +30,7 @@ namespace MailCheck.Dkim.Entity.Mapping
         {
             return new DkimEvaluationRecord(
                 record.DnsRecord.Record, 
-                record.EvaluationMessages?.Select(_ => _.ToDkimEvaluationMessage()).ToList());
+                record.Messages?.Select(_ => _.ToDkimEvaluationMessage()).ToList());
         }
 
         private static DkimEvaluationMessage ToDkimEvaluationMessage(this Message message)

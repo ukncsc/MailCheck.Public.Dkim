@@ -5,13 +5,14 @@ namespace MailCheck.Dkim.Contracts.Poller
 {
     public class DkimSelectorRecords
     {
-        public DkimSelectorRecords(Guid id, string selector, List<DkimTxtRecord> records, string cName, int messageSize, string error = null, string errorMarkDown = null, DateTime? checkd = null)
+        public DkimSelectorRecords(Guid id, string selector, List<DkimTxtRecord> records, string cName, int messageSize, string errorName = null, string error = null, string errorMarkDown = null, DateTime? checkd = null)
         {
             Id = id;
             Selector = selector;
             Records = records ?? new List<DkimTxtRecord>();
             CName = cName;
             MessageSize = messageSize;
+            ErrorName = errorName;
             Error = error;
             ErrorMarkDown = errorMarkDown;
             Checked = checkd ?? DateTime.UtcNow;
@@ -25,7 +26,7 @@ namespace MailCheck.Dkim.Contracts.Poller
         public string CName { get; }
 
         public int MessageSize { get; }
-
+        public string ErrorName { get; }
         public string Error { get; }
         public string ErrorMarkDown { get; }
         public DateTime Checked { get; }

@@ -11,7 +11,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
     {
         private const string Separator = ":";
 
-        public EvaluationResult<Tag> Parse(string value)
+        public EvaluationResult<Tag> Parse(string selector, string value)
         {
             string[] tokens = value?.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(_ => _.Trim()).ToArray();
@@ -20,8 +20,8 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
             {
                 Guid Error1Id = Guid.Parse("F59F5073-FDD3-4400-A5A9-62DCDC6B0C3B");
 
-                EvaluationError error = new EvaluationError(Error1Id, EvaluationErrorType.Error,
-                    string.Format(DKimEvaluatorParsersResources.InvalidFlagValueErrorMessage, value ?? "null"),
+                EvaluationError error = new EvaluationError(Error1Id, "mailcheck.dkim.invalidFlagValue", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidFlagValueErrorMessage, selector, value ?? "null"),
                     string.Format(DKimEvaluatorParsersMarkdownResources.InvalidFlagValueErrorMessage, value ?? "null"));
 
                 return new EvaluationResult<Tag>(new Flags(value, new List<FlagTypeValue>()), error);
@@ -32,9 +32,9 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
             Guid Error2Id = Guid.Parse("550293DB-D88F-40BA-9EF9-6CF28968610D");
 
             List<EvaluationError> errors = flagTypeValues.Where(_ => _.Type == FlagType.Unknown)
-                .Select(_ => new EvaluationError(Error2Id, EvaluationErrorType.Error,
-                string.Format(DKimEvaluatorParsersResources.InvalidFalgTypeErrorMessage, _.Value ?? "null"),
-                string.Format(DKimEvaluatorParsersMarkdownResources.InvalidFalgTypeErrorMessage, _.Value ?? "null")))
+                .Select(_ => new EvaluationError(Error2Id, "mailcheck.dkim.invalidFlagType", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidFlagTypeErrorMessage, selector, _.Value ?? "null"),
+                    string.Format(DKimEvaluatorParsersMarkdownResources.InvalidFlagTypeErrorMessage, _.Value ?? "null")))
                 .ToList();
 
             return new EvaluationResult<Tag>(new Flags(value, flagTypeValues), errors);

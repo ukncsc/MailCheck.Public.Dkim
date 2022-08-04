@@ -5,15 +5,17 @@ namespace MailCheck.Dkim.Evaluator.Rules
 {
     public class EvaluationError
     {
-        public EvaluationError(Guid id, EvaluationErrorType errorType, string message, string markDown)
+        public EvaluationError(Guid id, string name, EvaluationErrorType errorType, string message, string markDown)
         {
             Id = id;
+            Name = name;
             ErrorType = errorType;
             Message = message;
             MarkDown = markDown;
         }
 
         public Guid Id { get; }
+        public string Name { get; }
         public EvaluationErrorType ErrorType { get; }
 
         public string Message { get; }

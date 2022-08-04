@@ -50,13 +50,15 @@ namespace MailCheck.Dkim.Api.Domain
 
     public class DkimMessage
     {
-        public DkimMessage(string severity, string message, string markDown)
+        public DkimMessage(string name, string severity, string message, string markDown)
         {
+            Name = name;
             Severity = severity;
             Message = message;
             MarkDown = markDown;
         }
 
+        public string Name { get; }
         public string Severity { get; }
         public string Message { get; }
         public string MarkDown { get; }

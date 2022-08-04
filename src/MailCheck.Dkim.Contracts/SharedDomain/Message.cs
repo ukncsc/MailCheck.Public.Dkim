@@ -6,16 +6,17 @@ namespace MailCheck.Dkim.Contracts.SharedDomain
 {
     public class Message : IEquatable<Message>
     {
-        public Message(Guid id, MessageType messageType, string text, string markDown)
+        public Message(Guid id, string name, MessageType messageType, string text, string markDown)
         {
             Id = id;
+            Name = name;
             MessageType = messageType;
             Text = text;
             MarkDown = markDown;
         }
 
         public Guid Id { get; }
-
+        public string Name { get; }
         [JsonConverter(typeof(StringEnumConverter))]
         public MessageType MessageType { get; }
 
@@ -43,7 +44,7 @@ namespace MailCheck.Dkim.Contracts.SharedDomain
             unchecked
             {
                 var hashCode = MessageType.GetHashCode();
-                hashCode = (hashCode * 397) ^ (Text != null ? Text.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
                 return hashCode;
             }
         }

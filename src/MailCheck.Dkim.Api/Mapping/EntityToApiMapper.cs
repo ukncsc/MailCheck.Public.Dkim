@@ -30,7 +30,7 @@ namespace MailCheck.Dkim.Api.Mapping
             List<DkimRecord> dkimRecords = entityDkimSelector.Records?.Select(ToDkimRecord).ToList();
 
             List <DkimMessage> dkimMessages = entityDkimSelector.Records?
-                .SelectMany(_ => _?.EvaluationMessages ?? new List<EntityMessage>())
+                .SelectMany(_ => _?.Messages ?? new List<EntityMessage>())
                 .Select(ToDkimMessage)
                 .ToList();
 
@@ -39,7 +39,7 @@ namespace MailCheck.Dkim.Api.Mapping
 
         private static DkimMessage ToDkimMessage(EntityMessage entityMessage)
         {
-            return new DkimMessage(entityMessage.MessageType, entityMessage.Text, entityMessage.MarkDown);
+            return new DkimMessage(entityMessage.Name, entityMessage.MessageType, entityMessage.Text, entityMessage.MarkDown);
         }
 
         private static DkimRecord ToDkimRecord(EntityDkimRecord entityDkimRecord)

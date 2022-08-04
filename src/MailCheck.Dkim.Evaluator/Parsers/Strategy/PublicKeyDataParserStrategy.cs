@@ -13,7 +13,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
 
         public Guid Id = Guid.Parse("9E215A23-4C1B-4BD1-BCF4-FB99788D9C95");
 
-        public EvaluationResult<Tag> Parse(string value)
+        public EvaluationResult<Tag> Parse(string selector, string value)
         {
             //first remove all legal folding white space
             string trimmedValues = _fwsRegex.Replace(value ?? string.Empty, string.Empty);
@@ -23,9 +23,9 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
 
             if (!_base64Regex.IsMatch(trimmedValues))
             {
-                EvaluationError error = new EvaluationError(Id, EvaluationErrorType.Error,
-                 string.Format(DKimEvaluatorParsersResources.InvalidPublicKeyErrorMessage, value ?? "null"),
-                 string.Format(DKimEvaluatorParsersMarkdownResources.InvalidPublicKeyErrorMessage, value ?? "null"));
+                EvaluationError error = new EvaluationError(Id, "mailcheck.dkim.invalidPublicKey", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidPublicKeyErrorMessage, selector, value ?? "null"),
+                    string.Format(DKimEvaluatorParsersMarkdownResources.InvalidPublicKeyErrorMessage, value ?? "null"));
 
                 return new EvaluationResult<Tag>(publicKeyData, error);
             }

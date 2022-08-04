@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MailCheck.Dkim.Contracts.Entity;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Mapping;
 
 namespace MailCheck.Dkim.Entity.Entity
@@ -63,8 +64,8 @@ namespace MailCheck.Dkim.Entity.Entity
                     Guid Error1Id = Guid.Parse("9EB03982-274E-4015-BC04-2436C54F9E64");
 
                     selector.UpdatePollError(
-                        new Message(Error1Id, string.Format(DkimEntityResources.NoDnsTxtRecordsErrorMessage, selector.Selector, Id),
-                        string.Format(DkimEntityMarkdownResources.NoDnsTxtRecordsErrorMessage, selector.Selector, Id), MessageType.Error));
+                        new Message(Error1Id, "mailcheck.dkim.noDnsTxtRecords", MessageType.error, string.Format(DkimEntityResources.NoDnsTxtRecordsErrorMessage, selector.Selector, Id),
+                        string.Format(DkimEntityMarkdownResources.NoDnsTxtRecordsErrorMessage, selector.Selector, Id)));
                 }
                 else
                 {

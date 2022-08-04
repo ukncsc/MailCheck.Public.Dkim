@@ -31,8 +31,9 @@ namespace MailCheck.Dkim.Api.Test.Mapping
             string markDown = "markDown";
             string entity = "entity";
             string messageType = "messageType";
+            string name = "name";
             List<EntityDkimRecord> entityDkimRecords = new List<EntityDkimRecord>
-                {new EntityDkimRecord(new EntityDnsRecord(record, new List<string>()), new List<EntityMessage>{new EntityMessage(entity, messageType, markDown) })};
+                {new EntityDkimRecord(new EntityDnsRecord(record, new List<string>()), new List<EntityMessage>{new EntityMessage(name, entity, messageType, markDown) })};
 
             List<EntityDkimSelector> entityDkimSelectors = new List<EntityDkimSelector>
                 {new EntityDkimSelector(selector, entityDkimRecords, "cname", null)};

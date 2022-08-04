@@ -9,7 +9,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
     {
         public Guid Id = Guid.Parse("6DCF2BE4-50C8-4C84-B659-5B50B6E46DE8");
 
-        public EvaluationResult<Tag> Parse(string value)
+        public EvaluationResult<Tag> Parse(string selector, string value)
         {
             ServiceTypeType serviceTypeType = GetServiceTypeType(value);
 
@@ -17,8 +17,8 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
 
             if (serviceTypeType == ServiceTypeType.Unknown)
             {
-                EvaluationError error = new EvaluationError(Id, EvaluationErrorType.Error,
-                    string.Format(DKimEvaluatorParsersResources.InvalidServiceTypeErrorMessage, value ?? "null"),
+                EvaluationError error = new EvaluationError(Id, "mailcheck.dkim.invalidServiceType", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidServiceTypeErrorMessage, selector, value ?? "null"),
                     string.Format(DKimEvaluatorParsersMarkdownResources.InvalidServiceTypeErrorMessage, value ?? "null"));
 
                 return new EvaluationResult<Tag>(serviceType, error);

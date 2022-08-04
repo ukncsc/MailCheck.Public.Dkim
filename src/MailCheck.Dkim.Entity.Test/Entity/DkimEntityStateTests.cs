@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MailCheck.Dkim.Contracts.Entity;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Entity;
 using NUnit.Framework;
 
@@ -142,7 +143,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity
         [Test]
         public void UpdatesEmptyRecordEvaluationMessages()
         {
-            DkimSelector selector1 = CreateSelector(Selector1, CreateRecord(Dkim1, new Message(Guid.NewGuid(), "oh boy!", string.Empty, MessageType.Warning)));
+            DkimSelector selector1 = CreateSelector(Selector1, CreateRecord(Dkim1, new Message(Guid.NewGuid(), "mailcheck.dkim.testName", MessageType.warning, "oh boy!", string.Empty)));
             
             DkimEntityState state = CreateState(Domain, DkimState.PollPending, selector1);
 

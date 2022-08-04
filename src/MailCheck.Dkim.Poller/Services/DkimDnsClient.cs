@@ -59,7 +59,7 @@ namespace MailCheck.Dkim.Poller.Services
                         Guid Id1 = Guid.Parse("3956C316-5A86-47D3-B5DD-5F5418C0D5C8");
 
                         record = new DnsResult<DkimSelectorRecords>(
-                            new DkimSelectorRecords(Id1, selector, null, null, response.MessageSize,
+                            new DkimSelectorRecords(Id1, selector, null, null, response.MessageSize, "mailcheck.dkim.dnsLookupFailed",
                                 string.Format(DkimServiceResources.DnsLookupFailedErrorMessage, host,
                                     response.ErrorMessage),
                                 string.Format(DkimServiceMarkdownResources.DnsLookupFailedErrorMessage, host,
@@ -87,7 +87,7 @@ namespace MailCheck.Dkim.Poller.Services
                     Guid Id3 = Guid.Parse("8DE3D4F8-F1BD-45FF-B289-9A7D23FDC3F4");
 
                     record = new DnsResult<DkimSelectorRecords>(new DkimSelectorRecords(Id3, selector, null, null, 0,
-                        ex.Message, DkimServiceMarkdownResources.UnknownErrorWhenPollingErrorMessage));
+                        "mailcheck.dkim.unknownErrorWhenPolling", ex.Message, DkimServiceMarkdownResources.UnknownErrorWhenPollingErrorMessage));
 
                     string warning = $"Exception occurred when polling DKIM record for host {host}";
 

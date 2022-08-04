@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IncorrectPublicKeyConfigured" xml:space="preserve">
-    <value>The selector is incorrectly configured.</value>
+    <value>Selector {0}. The selector is incorrectly configured.</value>
   </data>
   <data name="NullPublicKeyConfigured" xml:space="preserve">
-    <value>The selector has been revoked.</value>
+    <value>Selector {0}. The selector has been revoked.</value>
   </data>
   <data name="PublicKeyDataTagMustExistErrorMessage" xml:space="preserve">
-    <value>Record must contain a public key data tag.</value>
+    <value>Selector {0}. Record must contain a public key data tag.</value>
+  </data>
+  <data name="SelectorNotInUseInfoMessage" xml:space="preserve">
+    <value>Selector {0}. This DKIM selector is not currently in use.</value>
   </data>
   <data name="PublicKeyIsToShortErrorMessage" xml:space="preserve">
-    <value>The public rsa key is too short, key size {0}.</value>
+    <value>Selector {0}. The public rsa key is too short, key size {1}.</value>
   </data>
   <data name="PublicKeyIsToShortUseLongerErrorMessage" xml:space="preserve">
-    <value>The public rsa key is too short, key size {0} - Use a longer key size &gt;= 2048.</value>
+    <value>Selector {0}. We recommend a longer key size for this selector.</value>
   </data>
-  <data name="PublicKeyTypeTagMustExistErrorMessage" xml:space="preserve">
-    <value>Record must contain a public key type tag.</value>
-  </data>
-   <data name="CorruptPublicKeyErrorMessage" xml:space="preserve">
-    <value>The public key could not be decoded, it may be corrupt or incomplete.</value>
+  <data name="CorruptPublicKeyErrorMessage" xml:space="preserve">
+    <value>Selector {0}. The public key could not be decoded, it may be corrupt or incomplete.</value>
   </data>
 </root>

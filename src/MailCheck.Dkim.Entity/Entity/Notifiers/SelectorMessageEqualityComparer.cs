@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MailCheck.Dkim.Entity.Entity.Notifications;
 
 namespace MailCheck.Dkim.Entity.Entity.Notifiers
@@ -7,7 +8,7 @@ namespace MailCheck.Dkim.Entity.Entity.Notifiers
     {
         public bool Equals(SelectorMessage x, SelectorMessage y)
         {
-            return x.Message.Id == y.Message.Id && x.Selector.Equals(y.Selector);
+            return x.Message.Name.Equals(y.Message.Name) && x.Selector.Equals(y.Selector);
         }
 
         public int GetHashCode(SelectorMessage obj)

@@ -20,6 +20,7 @@ using MailCheck.Dkim.Entity.Entity.Notifiers;
 using MailCheck.Common.Contracts.Messaging;
 using MailCheck.Dkim.Contracts.Scheduler;
 using Message = MailCheck.Common.Messaging.Abstractions.Message;
+using MailCheck.Dkim.Contracts.SharedDomain;
 
 namespace MailCheck.Dkim.Entity.Test.Entity
 {
@@ -181,7 +182,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity
             DkimRecordEvaluationResult message = new DkimRecordEvaluationResult(
                 Id, new List<DkimSelectorResult>
                 {
-                    new DkimSelectorResult(new Contracts.SharedDomain.DkimSelector("selector", null, null, new Contracts.SharedDomain.Message(Guid.Empty, Contracts.SharedDomain.MessageType.error, "error", "markdown")), new List<RecordResult>())
+                    new DkimSelectorResult(new Contracts.SharedDomain.DkimSelector("selector", null, null, new Contracts.SharedDomain.Message(Guid.Empty, "", Contracts.SharedDomain.MessageType.error, "error", "markdown")), new List<RecordResult>())
                 });
 
             message.Timestamp = DateTime.UtcNow;

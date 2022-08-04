@@ -10,6 +10,7 @@ using MailCheck.Dkim.Entity.Entity;
 using MailCheck.Dkim.Migration;
 using NUnit.Framework;
 using MailCheck.Dkim.Contracts.Entity;
+using MailCheck.Dkim.Contracts.SharedDomain;
 
 namespace MailCheck.Dkim.Entity.Test.Dao
 {

@@ -9,7 +9,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
     {
         public Guid Id = Guid.Parse("3FF895EA-1622-4D8C-82C5-0642399F2937");
 
-        public EvaluationResult<Tag> Parse(string value)
+        public EvaluationResult<Tag> Parse(string selector, string value)
         {
             KeyType keyType = GetPublicKeyType(value);
 
@@ -17,8 +17,8 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
 
             if (keyType == KeyType.Unknown)
             {
-                EvaluationError error = new EvaluationError(Id, EvaluationErrorType.Error,
-                    string.Format(DKimEvaluatorParsersResources.InvalidPublicTypeErrorMessage, value ?? "null"),
+                EvaluationError error = new EvaluationError(Id, "mailcheck.dkim.invalidPublicKeyType", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidPublicTypeErrorMessage, selector, value ?? "null"),
                     string.Format(DKimEvaluatorParsersMarkdownResources.InvalidPublicTypeErrorMessage, value ?? "null"));
 
                 return new EvaluationResult<Tag>(publicKeyType, error);

@@ -16,6 +16,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using MailCheck.Common.Processors.Notifiers;
+using FindingsChangedNotifier = MailCheck.Common.Processors.Notifiers.FindingsChangedNotifier;
+using LocalFindingsChangedNotifier = MailCheck.Dkim.Entity.Entity.Notifiers.FindingsChangedNotifier;
 
 namespace MailCheck.Dkim.Entity.StartUp
 {
@@ -49,6 +52,9 @@ namespace MailCheck.Dkim.Entity.StartUp
                 .AddTransient<IChangeNotifiersComposite, ChangeNotifiersComposite>()
                 .AddTransient<IEqualityComparer<SelectorRecord>, SelectorRecordEqualityComparer>()
                 .AddTransient<IEqualityComparer<SelectorMessage>, SelectorMessageEqualityComparer>()
+                .AddTransient<IChangeNotifier, LocalFindingsChangedNotifier>()
+                .AddTransient<IFindingsChangedNotifier, FindingsChangedNotifier>()
+                .AddTransient<IChangeNotifiersComposite, ChangeNotifiersComposite>()
                 .AddTransient<IDomainStatusEvaluator, DomainStatusEvaluator>()
                 .AddTransient<IDomainStatusPublisher, DomainStatusPublisher>()
                 .AddTransient<IClock, Clock>();

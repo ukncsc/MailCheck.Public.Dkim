@@ -20,7 +20,7 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
         [Test]
         public void NullValueInvalid()
         {
-            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse(null);
+            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("test-selector", null);
 
             Assert.That(tag.Item, Is.TypeOf<Flags>());
 
@@ -30,13 +30,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(flags.FlagTypes, Is.Empty);
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value 'null' for t"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value 'null' for t"), Is.True);
         }
 
         [Test]
         public void EmptyStringInvalid()
         {
-            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse(string.Empty);
+            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("test-selector", string.Empty);
 
             Assert.That(tag.Item, Is.TypeOf<Flags>());
 
@@ -46,13 +46,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(flags.FlagTypes, Is.Empty);
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value '' for t"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value '' for t"), Is.True);
         }
 
         [Test]
         public void ColonInvalid()
         {
-            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse(":");
+            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("test-selector", ":");
 
             Assert.That(tag.Item, Is.TypeOf<Flags>());
 
@@ -62,13 +62,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(flags.FlagTypes, Is.Empty);
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value ':' for t"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value ':' for t"), Is.True);
         }
 
         [Test]
         public void IncorrectFlagValueInvalid()
         {
-            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("test:y");
+            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("test-selector", "test:y");
 
             Assert.That(tag.Item, Is.TypeOf<Flags>());
 
@@ -82,13 +82,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(flags.FlagTypes[1].Type, Is.EqualTo(FlagType.Y));
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value 'test' for flag type"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value 'test' for flag type"), Is.True);
         }
 
         [Test]
         public void CorrectFlagValueValid()
         {
-            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("s");
+            EvaluationResult<Tag> tag = _flagsParserStrategy.Parse("test-selector", "s");
 
             Assert.That(tag.Item, Is.TypeOf<Flags>());
 

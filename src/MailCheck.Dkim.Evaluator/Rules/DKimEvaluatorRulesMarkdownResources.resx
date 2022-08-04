@@ -124,7 +124,7 @@ A DKIM record should be of type TXT and look like:
 
 `v=DKIM1;p=KEY` or `p=KEY`</value>
   </data>
-   <data name="NullPublicKeyConfigured" xml:space="preserve">
+  <data name="NullPublicKeyConfigured" xml:space="preserve">
     <value>The selector has been revoked.
 
 An empty key signals to clients that the selector should be removed and should no longer be trusted</value>
@@ -141,8 +141,13 @@ An empty key signals to clients that the selector should be removed and should n
 
 [IANA DKIM registry](https://www.iana.org/assignments/dkim-parameters/dkim-parameters.xhtml#dkim-parameters-6)</value>
   </data>
-   <data name="CorruptPublicKeyErrorMessage" xml:space="preserve">
+  <data name="CorruptPublicKeyErrorMessage" xml:space="preserve">
     <value>The key looked like Base64 but could not successfully be decoded, this may be because it has been corrupted, or is otherwise incomplete.
     This is most likely a manual copy and pasting error, please compare the key in your DKIM selector DNS entry with that of your mail server</value>
+  </data>
+  <data name="PublicKeyIsToShortUseLongerErrorMessage" xml:space="preserve">
+    <value>We have detected that you are using a 1024-bit public rsa key. We recommend a stronger key size of 2048-bits. 
+
+For further information about setting up and maintaining DKIM please refer to our guidance:  [Create and manage a DKIM record](https://www.ncsc.gov.uk/collection/email-security-and-anti-spoofing/configure-anti-spoofing-controls-/create-and-manage-a-dkim-record)</value>
   </data>
 </root>

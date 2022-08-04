@@ -32,7 +32,7 @@ namespace MailCheck.Dkim.Evaluator.Mapping
 
         private static DkimEvaluatorMessage MapToEvaluatorMessage(EvaluationError message)
         {
-            return new DkimEvaluatorMessage(message.Id, message.ErrorType, message.Message, message.MarkDown);
+            return new DkimEvaluatorMessage(message.Id, message.Name, message.ErrorType, message.Message, message.MarkDown);
         }
 
         private static DkimSelectorContract ToContractSelector(DkimSelector dkimSelector)
@@ -47,7 +47,7 @@ namespace MailCheck.Dkim.Evaluator.Mapping
 
         private static Message MapToMessage(EvaluationError message)
         {
-            return new Message(message.Id, ToMessageType(message.ErrorType), message.Message, message.MarkDown);
+            return new Message(message.Id, message.Name, ToMessageType(message.ErrorType), message.Message, message.MarkDown);
         }
 
         private static MessageType ToMessageType(EvaluationErrorType type)

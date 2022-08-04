@@ -74,12 +74,12 @@ namespace MailCheck.Dkim.Entity.Test.Entity.DomainStatus
 
         private DkimEvaluatorMessage CreateDkimEvaluatorMessage(EvaluationErrorType messageType)
         {
-            return new DkimEvaluatorMessage(Guid.Empty, messageType, "", "");
+            return new DkimEvaluatorMessage(Guid.Empty, "mailcheck.dkim.testName", messageType, "", "");
         }
 
         private Message CreateMessage(MessageType messageType)
         {
-            return new Message(Guid.Empty, messageType, "", "");
+            return new Message(Guid.Empty, "mailcheck.dkim.testName", messageType, "", "");
         }
     }
 }

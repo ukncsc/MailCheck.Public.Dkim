@@ -5,7 +5,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers
 {
     public interface ITagParserStrategy
     {
-        EvaluationResult<Tag> Parse(string value);
+        EvaluationResult<Tag> Parse(string selector, string value);
         string Tag { get; }
         int MaxOccurences { get; }
     }

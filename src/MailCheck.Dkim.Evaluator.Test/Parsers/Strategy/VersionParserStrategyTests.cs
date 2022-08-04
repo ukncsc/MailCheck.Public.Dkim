@@ -10,15 +10,15 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
     public class VersionParserStrategyTests
     {
         [TestCase("DKIM1", null, null, TestName = "DKIM1 is valid value")]
-        [TestCase("dkim1", "Invalid value 'dkim1' for v", EvaluationErrorType.Error, TestName = "lower case is invalid")]
-        [TestCase("DKIM", "Invalid value 'DKIM' for v", EvaluationErrorType.Error, TestName = "DKIM is invalid value")]
-        [TestCase(null, "Invalid value 'null' for v", EvaluationErrorType.Error, TestName = "null is invalid value")]
-        [TestCase("", "Invalid value '' for v", EvaluationErrorType.Error, TestName = "empty string is invalid value")]
+        [TestCase("dkim1", "Selector test-selector. Invalid value 'dkim1' for v", EvaluationErrorType.Error, TestName = "lower case is invalid")]
+        [TestCase("DKIM", "Selector test-selector. Invalid value 'DKIM' for v", EvaluationErrorType.Error, TestName = "DKIM is invalid value")]
+        [TestCase(null, "Selector test-selector. Invalid value 'null' for v", EvaluationErrorType.Error, TestName = "null is invalid value")]
+        [TestCase("", "Selector test-selector. Invalid value '' for v", EvaluationErrorType.Error, TestName = "empty string is invalid value")]
         public void VersionParserStategy(string tokenValue, string errorMessageStartsWith, EvaluationErrorType? type)
         {
             VersionParserStrategy versionParserStrategy = new VersionParserStrategy();
 
-            EvaluationResult<Tag> tag = versionParserStrategy.Parse(tokenValue);
+            EvaluationResult<Tag> tag = versionParserStrategy.Parse("test-selector", tokenValue);
 
             if (errorMessageStartsWith == null)
             {

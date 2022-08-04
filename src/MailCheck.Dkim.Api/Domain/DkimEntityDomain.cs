@@ -52,15 +52,15 @@ namespace MailCheck.Dkim.Api.Domain
 
     public class EntityDkimRecord
     {
-        public EntityDkimRecord(EntityDnsRecord dnsRecord, List<EntityMessage> evaluationMessages = null)
+        public EntityDkimRecord(EntityDnsRecord dnsRecord, List<EntityMessage> messages = null)
         {
             DnsRecord = dnsRecord;
-            EvaluationMessages = evaluationMessages;
+            Messages = messages;
         }
 
         public EntityDnsRecord DnsRecord { get; }
 
-        public List<EntityMessage> EvaluationMessages { get; }
+        public List<EntityMessage> Messages { get; }
     }
 
      public class EntityDnsRecord
@@ -78,13 +78,15 @@ namespace MailCheck.Dkim.Api.Domain
 
     public class EntityMessage
     {
-        public EntityMessage(string text, string messageType, string markDown)
+        public EntityMessage(string name, string text, string messageType, string markDown)
         {
+            Name = name;
             Text = text;
             MessageType = messageType;
             MarkDown = markDown;
         }
 
+        public string Name { get; }
         public string Text { get; }
         public string MessageType { get; }
         public string MarkDown { get; }

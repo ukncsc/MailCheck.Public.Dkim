@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AWSProjectType>Lambda</AWSProjectType>
   </PropertyGroup>
   <ItemGroup>
@@ -10,19 +10,16 @@
     <None Remove="Exceptions\**" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.2.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
-    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="1.0.0" />
-    <PackageReference Include="AWSSDK.Core" Version="3.3.31.6" />
-    <PackageReference Include="MailCheck.Common.Contracts" Version="5.1.0" />
-    <PackageReference Include="MailCheck.Common.Data" Version="5.1.0" />
-    <PackageReference Include="MailCheck.Common.Messaging" Version="5.1.0" />
-    <PackageReference Include="MailCheck.Common.SSM" Version="5.1.0" />
-    <PackageReference Include="MailCheck.Common.Util" Version="5.1.0" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.0.0" />
+    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="2.0.0" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.11.6" />
+    <PackageReference Include="MailCheck.Common.Contracts" Version="12.0.0" />
+    <PackageReference Include="MailCheck.Common.Data" Version="12.0.0" />
+    <PackageReference Include="MailCheck.Common.Messaging" Version="12.0.0" />
+    <PackageReference Include="MailCheck.Common.SSM" Version="12.0.0" />
+    <PackageReference Include="MailCheck.Common.Util" Version="12.0.0" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.17" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Serilog" Version="2.8.0" />
     <PackageReference Include="Dapper" Version="2.0.35" />

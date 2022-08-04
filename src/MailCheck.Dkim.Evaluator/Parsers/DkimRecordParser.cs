@@ -12,7 +12,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers
 {
     public interface IDkimRecordParser
     {
-        DkimRecord Parse(DnsRecord record);
+        DkimRecord Parse(string selector, DnsRecord record, string cname);
     }
 
     public class DkimRecordParser : IDkimRecordParser
@@ -20,34 +20,35 @@ namespace MailCheck.Dkim.Evaluator.Parsers
         private const char Separator = ';';
         private readonly ITagParser _tagParser;
         private readonly IImplicitProvider<Tag> _implicitProvider;
-        private readonly IEvaluator<DkimRecord> _ruleEvaluator;
+        private readonly IEvaluator<DkimEvaluationObject> _ruleEvaluator;
 
         public DkimRecordParser(
-            ITagParser tagParser, 
-            IImplicitProvider<Tag> implicitProvider, 
-            IEvaluator<DkimRecord> ruleEvaluator)
+            ITagParser tagParser,
+            IImplicitProvider<Tag> implicitProvider,
+            IEvaluator<DkimEvaluationObject> ruleEvaluator)
         {
             _tagParser = tagParser;
             _implicitProvider = implicitProvider;
             _ruleEvaluator = ruleEvaluator;
         }
 
-        public DkimRecord Parse(DnsRecord record)
+        public DkimRecord Parse(string selector, DnsRecord record, string cname)
         {
             List<string> stringTags = record.Record.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(_ => _.Trim())
                 .Where(_ => _ != string.Empty)
                 .ToList();
 
-            EvaluationResult<List<Tag>> evaluatedTags = _tagParser.Parse(stringTags);
+            EvaluationResult<List<Tag>> evaluatedTags = _tagParser.Parse(selector, stringTags);
 
             List<Tag> implicitTags = _implicitProvider.GetImplicitValues(evaluatedTags.Item);
 
-            DkimRecord dkimRecord = new DkimRecord(record, evaluatedTags.Item.Concat(implicitTags).ToList(), evaluatedTags.Errors);
+            DkimRecord dkimRecord = new DkimRecord(record, evaluatedTags.Item.Concat(implicitTags).ToList(),
+                evaluatedTags.Errors);
 
             if (evaluatedTags.Errors != null && evaluatedTags.Errors.All(x => x.ErrorType != EvaluationErrorType.Error))
             {
-                EvaluationResult<DkimRecord> evaluationResult = _ruleEvaluator.Evaluate(dkimRecord).Result;
+                EvaluationResult<DkimEvaluationObject> evaluationResult = _ruleEvaluator.Evaluate(new DkimEvaluationObject(selector, dkimRecord, cname)).Result;
 
                 dkimRecord.Errors.AddRange(evaluationResult.Errors);
             }

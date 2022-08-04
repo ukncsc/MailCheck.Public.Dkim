@@ -9,6 +9,7 @@ using MailCheck.Dkim.Contracts.Entity;
 using MailCheck.Dkim.Contracts.Evaluator;
 using MailCheck.Dkim.Contracts.External;
 using MailCheck.Dkim.Contracts.Scheduler;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Config;
 using MailCheck.Dkim.Entity.Dao;
 using MailCheck.Dkim.Entity.Entity.DomainStatus;

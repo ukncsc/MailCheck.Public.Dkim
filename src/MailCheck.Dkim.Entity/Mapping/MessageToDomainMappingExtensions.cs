@@ -3,6 +3,7 @@ using System.Linq;
 using MailCheck.Dkim.Contracts.Evaluator;
 using MailCheck.Dkim.Contracts.Evaluator.Domain;
 using MailCheck.Dkim.Contracts.External;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Entity;
 
 namespace MailCheck.Dkim.Entity.Mapping
@@ -25,15 +26,7 @@ namespace MailCheck.Dkim.Entity.Mapping
                 selectorResult.Selector.Selector,
                 selectorResult.RecordsResults.ToDkimRecords(),
                 selectorResult.Selector.CName,
-                selectorResult.Selector.PollError != null ? selectorResult.Selector.PollError.ToDkimMessage() : null);
-        }
-
-        private static Message ToDkimMessage(this Contracts.SharedDomain.Message message)
-        {
-            return new Message(message.Id,
-                message.Text,
-                message.MarkDown,
-                message.MessageType.ToMessageType());
+                selectorResult.Selector.PollError != null ? selectorResult.Selector.PollError : null);
         }
 
         private static List<DkimRecord> ToDkimRecords(this List<RecordResult> results)
@@ -46,9 +39,11 @@ namespace MailCheck.Dkim.Entity.Mapping
         private static List<Message> ToDkimEvaluationMessages(this List<DkimEvaluatorMessage> evaluatorMessages)
         {
             return evaluatorMessages.Select(_ => new Message(_.Id,
+                _.Name,
+                _.ErrorType.ToMessageType(),
                 _.Message,
-                _.MarkDown,
-                _.ErrorType.ToMessageType())).ToList();
+                _.MarkDown
+                )).ToList();
         }
 
         private static MessageType ToMessageType(this EvaluationErrorType errorType)
@@ -56,11 +51,11 @@ namespace MailCheck.Dkim.Entity.Mapping
             switch (errorType)
             {
                 case (EvaluationErrorType.Error):
-                    return MessageType.Error;
+                    return MessageType.error;
                 case (EvaluationErrorType.Warning):
-                    return MessageType.Warning;
+                    return MessageType.warning;
                 default:
-                    return MessageType.Info;
+                    return MessageType.info;
             }
         }
 
@@ -69,11 +64,11 @@ namespace MailCheck.Dkim.Entity.Mapping
             switch (errorType)
             {
                 case (Contracts.SharedDomain.MessageType.error):
-                    return MessageType.Error;
+                    return MessageType.error;
                 case (Contracts.SharedDomain.MessageType.warning):
-                    return MessageType.Warning;
+                    return MessageType.warning;
                 default:
-                    return MessageType.Info;
+                    return MessageType.info;
             }
         }
     }

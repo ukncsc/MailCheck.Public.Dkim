@@ -9,16 +9,16 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
     [TestFixture]
     public class PublicKeyTypeParserStrategyTests
     {
-        [TestCase(null, KeyType.Unknown, "Invalid value 'null' for k", EvaluationErrorType.Error, TestName = "null is invalid value")]
-        [TestCase("", KeyType.Unknown, "Invalid value '' for k", EvaluationErrorType.Error, TestName = "empty string is invalid value")]
-        [TestCase("RSA", KeyType.Unknown, "Invalid value 'RSA' for k", EvaluationErrorType.Error, TestName = "upper case RSA invalid")]
+        [TestCase(null, KeyType.Unknown, "Selector test-selector. Invalid value 'null' for k", EvaluationErrorType.Error, TestName = "null is invalid value")]
+        [TestCase("", KeyType.Unknown, "Selector test-selector. Invalid value '' for k", EvaluationErrorType.Error, TestName = "empty string is invalid value")]
+        [TestCase("RSA", KeyType.Unknown, "Selector test-selector. Invalid value 'RSA' for k", EvaluationErrorType.Error, TestName = "upper case RSA invalid")]
         [TestCase("rsa", KeyType.Rsa, null, null, TestName = "rsa valid")]
-        [TestCase("ED25519", KeyType.Unknown, "Invalid value 'ED25519' for k", EvaluationErrorType.Error, TestName = "upper case ED25519 invalid")]
+        [TestCase("ED25519", KeyType.Unknown, "Selector test-selector. Invalid value 'ED25519' for k", EvaluationErrorType.Error, TestName = "upper case ED25519 invalid")]
         [TestCase("ed25519", KeyType.Ed25519, null, null, TestName = "ed25519 valid")]
         public void PublicKeyTypeParserStrategy(string tokenValue, KeyType keyType, string errorMessageStartsWith, EvaluationErrorType? type)
         {
             PublicKeyTypeParserStrategy publicKeyTypeParserStrategy = new PublicKeyTypeParserStrategy();
-            EvaluationResult<Tag> publicKeyTypeResult = publicKeyTypeParserStrategy.Parse(tokenValue);
+            EvaluationResult<Tag> publicKeyTypeResult = publicKeyTypeParserStrategy.Parse("test-selector", tokenValue);
 
             PublicKeyType publicKeyType = (PublicKeyType)publicKeyTypeResult.Item;
 

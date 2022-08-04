@@ -5,12 +5,12 @@ using AutoFixture;
 using FakeItEasy;
 using MailCheck.Common.Messaging.Abstractions;
 using MailCheck.Dkim.Contracts.Poller;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Config;
 using MailCheck.Dkim.Entity.Entity;
 using MailCheck.Dkim.Entity.Entity.Notifications;
 using MailCheck.Dkim.Entity.Entity.Notifiers;
 using NUnit.Framework;
-using DkimSelector = MailCheck.Dkim.Entity.Entity.DkimSelector;
 
 namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 {

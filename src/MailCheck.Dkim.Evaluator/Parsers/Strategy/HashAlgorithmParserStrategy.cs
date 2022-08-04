@@ -11,7 +11,7 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
     {
         private const string Separator = ":";
 
-        public EvaluationResult<Tag> Parse(string value)
+        public EvaluationResult<Tag> Parse(string selector, string value)
         {
             string[] tokens = value?.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(_ => _.Trim()).ToArray();
@@ -20,9 +20,9 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
             {
                 Guid Error1Id = Guid.Parse("2028085F-0112-48CD-8E84-5E9E81B18D04");
 
-                EvaluationError error = new EvaluationError(Error1Id, EvaluationErrorType.Error,
-                            string.Format(DKimEvaluatorParsersResources.InvalidHashAlgorithmErrorMessage, value ?? "null"),
-                            string.Format(DKimEvaluatorParsersMarkdownResources.InvalidHashAlgorithmErrorMessage, value ?? "null"));
+                EvaluationError error = new EvaluationError(Error1Id, "mailcheck.dkim.invalidHashAlgorithm", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidHashAlgorithmErrorMessage, selector, value ?? "null"),
+                    string.Format(DKimEvaluatorParsersMarkdownResources.InvalidHashAlgorithmErrorMessage, value ?? "null"));
 
                 return new EvaluationResult<Tag>(new HashAlgorithm(value, new List<HashAlgorithmValue>()), error);
             }
@@ -32,8 +32,10 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
             Guid Error2Id = Guid.Parse("8BC9C8EF-174D-415C-B6D1-2BA5C57C63A9");
 
             List<EvaluationError> errors = hashAlgorithmValues.Where(_ => _.Type == HashAlgorithmType.Unknown)
-                .Select(_ => new EvaluationError(Error2Id, EvaluationErrorType.Error, string.Format(DKimEvaluatorParsersResources.UnknownHashAlgorithmErrorMessage, _.Value ?? "null"),
-                string.Format(DKimEvaluatorParsersMarkdownResources.UnknownHashAlgorithmErrorMessage, _.Value ?? "null"))).ToList();
+                .Select(_ => new EvaluationError(Error2Id, "mailcheck.dkim.unknownHashAlgorithm", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.UnknownHashAlgorithmErrorMessage, selector, _.Value ?? "null"),
+                    string.Format(DKimEvaluatorParsersMarkdownResources.UnknownHashAlgorithmErrorMessage, _.Value ?? "null")))
+                .ToList();
 
             return new EvaluationResult<Tag>(new HashAlgorithm(value, hashAlgorithmValues), errors);
         }

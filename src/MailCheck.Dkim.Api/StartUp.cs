@@ -71,14 +71,14 @@ namespace MailCheck.Dkim.Api
                 .AddAudit("Dkim-Api")
                 .AddMailCheckAuthenticationClaimsPrincipleClient()
                 .AddSerilogLogging()
-                .AddMvc(config =>
+                .AddControllers(config =>
                 {
                     AuthorizationPolicy policy = new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
                         .Build();
                     config.Filters.Add(new AuthorizeFilter(policy));
-                })
-                .AddJsonOptions(options =>
+                }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
@@ -92,7 +92,7 @@ namespace MailCheck.Dkim.Api
                 .AddMailCheckClaimsAuthentication();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (RunInDevMode())
             {
@@ -105,7 +105,11 @@ namespace MailCheck.Dkim.Api
                .UseAuthentication()
                .UseMiddleware<AuditLoggingMiddleware>()
                .UseMiddleware<UnhandledExceptionMiddleware>()
-               .UseMvc();
+               .UseRouting()
+               .UseEndpoints(endpoints => {
+                    endpoints.MapDefaultControllerRoute();
+                    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+               });
         }
 
         private bool RunInDevMode()
@@ -118,7 +122,7 @@ namespace MailCheck.Dkim.Api
         {
             options.AddPolicy(CorsPolicyName, builder =>
                 builder
-                    .AllowAnyOrigin()
+                    .SetIsOriginAllowed(_ => true)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());

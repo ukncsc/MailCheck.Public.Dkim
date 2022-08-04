@@ -4,6 +4,7 @@
     {
         info = 0,
         warning = 1,
-        error = 2
+        error = 2,
+        positive = 3
     }
 }

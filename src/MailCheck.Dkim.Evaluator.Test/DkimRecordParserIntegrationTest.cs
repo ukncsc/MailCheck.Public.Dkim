@@ -25,7 +25,7 @@ namespace MailCheck.Dkim.Evaluator.Test
             //string record = "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxBwakMBSvmNXD9UJvNVpP3X+QanFgeep6e89Yb5yVeHE7hs7UYglXEG2a2KEGnkOqxu7IfsHtbv3ibbZVSqk8OV9n58Gzl6uGs9MCQAa0JhIodRMzjF20PhxBhKBnSp9SX1E5RlgOplNF2Bat0+2ypb+TKmEgnMkjok9YXL8ddwIDAQAB; n=1024,1462785360,1";
             string record = "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIl6aF27aG0BCld/lgh2vC+1Mw55QdjrYKUsI/NksVASi9XQzh05yW87rlnSnmNg13k2E+gJaQL483/jUTGKwMWLlFUUQ8WwazUpw+xsuMdksHyp+RcHizR+reXNmNikJ3xbCKxaFW3er6MiZGRkf64zf87NwEvU8r47LGPcjK6wIDAQAB";
 
-            DkimRecord dkimRecord = dkimRecordParser.Parse(new DnsRecord(record, new List<string>()));
+            DkimRecord dkimRecord = dkimRecordParser.Parse("selector1",new DnsRecord(record, new List<string>()), null);
         }
 
         private IDkimRecordParser Create()
@@ -43,9 +43,9 @@ namespace MailCheck.Dkim.Evaluator.Test
                 .AddTransient<ITagParserStrategy, PublicKeyDataParserStrategy>()
                 .AddTransient<ITagParserStrategy, VersionParserStrategy>()
                 .AddTransient<ITagParserStrategy, ServiceTypeParserStrategy>()
-                .AddTransient<IEvaluator<DkimRecord>, Evaluator<DkimRecord>>()
-                .AddTransient<IRule<DkimRecord>, SelectorShouldBeWellConfigured>()
-                .AddTransient<IRule<DkimRecord>, TagShouldHavePublicKeyData>()
+                .AddTransient<IEvaluator<DkimEvaluationObject>, Evaluator<DkimEvaluationObject>>()
+                .AddTransient<IRule<DkimEvaluationObject>, SelectorShouldBeWellConfigured>()
+                .AddTransient<IRule<DkimEvaluationObject>, TagShouldHavePublicKeyData>()
                 .AddTransient<IImplicitProvider<Tag>, ImplicitProvider<Tag>>()
                 .AddTransient<IImplicitProviderStrategy<Tag>, FlagTypeImplicitProvider>()
                 .AddTransient<IImplicitProviderStrategy<Tag>, HashAlgorithImplicitProvider>()

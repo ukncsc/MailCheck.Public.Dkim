@@ -13,15 +13,15 @@ namespace MailCheck.Dkim.Evaluator.Parsers.Strategy
 
         public Guid Id = Guid.Parse("ECE582A3-79AB-48DB-8028-7AAE18383E0E");
 
-        public EvaluationResult<Tag> Parse(string value)
+        public EvaluationResult<Tag> Parse(string selector, string value)
         {
             Version version = new Version(value);
 
             if (!_regex.IsMatch(value ?? string.Empty))
             {
-                EvaluationError error = new EvaluationError(Id, EvaluationErrorType.Error,
-                   string.Format(DKimEvaluatorParsersResources.InvalidVersionErrorMessage, value ?? "null"),
-                   string.Format(DKimEvaluatorParsersMarkdownResources.InvalidVersionErrorMessage, value ?? "null"));
+                EvaluationError error = new EvaluationError(Id, "mailcheck.dkim.invalidVersion", EvaluationErrorType.Error,
+                    string.Format(DKimEvaluatorParsersResources.InvalidVersionErrorMessage, selector, value ?? "null"),
+                    string.Format(DKimEvaluatorParsersMarkdownResources.InvalidVersionErrorMessage, value ?? "null"));
 
                 return new EvaluationResult<Tag>(version, error);
             }

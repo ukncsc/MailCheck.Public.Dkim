@@ -19,7 +19,7 @@ namespace MailCheck.Dkim.Evaluator.Mapping
         {
             return new DkimSelector(records.Selector, records.CName,
                 records.Records?.Select(_ => new DkimRecord(new DnsRecord(_.Record, _.RecordParts))).ToList(),
-                records.Error == null ? null : new Message(records.Id, MessageType.error, records.Error, records.ErrorMarkDown));
+                records.Error == null ? null : new Message(records.Id, records.ErrorName, MessageType.error, records.Error, records.ErrorMarkDown));
         }
     }
 }

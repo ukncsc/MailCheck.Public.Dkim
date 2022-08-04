@@ -21,23 +21,23 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
         [Test]
         public void NullValueCausesError()
         {
-            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse(null);
+            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse("test-selector", null);
 
             Assert.That(tag.Item, Is.TypeOf<HashAlgorithm>());
 
-            HashAlgorithm hashAlgorithm = (HashAlgorithm) tag.Item;
+            HashAlgorithm hashAlgorithm = (HashAlgorithm)tag.Item;
 
             Assert.That(hashAlgorithm.Value, Is.Null);
             Assert.That(hashAlgorithm.HashAlgorithms, Is.Empty);
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value 'null' for h"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value 'null' for h"), Is.True);
         }
 
         [Test]
         public void EmptyStringCausesError()
         {
-            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse(string.Empty);
+            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse("test-selector", string.Empty);
 
             Assert.That(tag.Item, Is.TypeOf<HashAlgorithm>());
 
@@ -47,13 +47,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(hashAlgorithm.HashAlgorithms, Is.Empty);
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value '' for h"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value '' for h"), Is.True);
         }
 
         [Test]
         public void ColonCausesError()
         {
-            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse(":");
+            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse("test-selector", ":");
 
             Assert.That(tag.Item, Is.TypeOf<HashAlgorithm>());
 
@@ -63,13 +63,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(hashAlgorithm.HashAlgorithms, Is.Empty);
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value ':' for h"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value ':' for h"), Is.True);
         }
 
         [Test]
         public void InvalidAlgorithmValueCausesError()
         {
-            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse("test:sha1");
+            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse("test-selector", "test:sha1");
 
             Assert.That(tag.Item, Is.TypeOf<HashAlgorithm>());
 
@@ -83,13 +83,13 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
             Assert.That(hashAlgorithm.HashAlgorithms[1].Type, Is.EqualTo(HashAlgorithmType.Sha1));
             Assert.That(tag.Errors.Count, Is.EqualTo(1));
             Assert.That(tag.Errors[0].ErrorType, Is.EqualTo(EvaluationErrorType.Error));
-            Assert.That(tag.Errors[0].Message.StartsWith("Invalid value 'test' for hash algorithm"), Is.True);
+            Assert.That(tag.Errors[0].Message.StartsWith("Selector test-selector. Invalid value 'test' for hash algorithm"), Is.True);
         }
 
         [Test]
         public void ValidAlgorithmsNoErrors()
         {
-            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse("sha256");
+            EvaluationResult<Tag> tag = _hashAlgorithmParserStrategy.Parse(string.Empty, "sha256");
 
             Assert.That(tag.Item, Is.TypeOf<HashAlgorithm>());
 

@@ -5,13 +5,13 @@ using MailCheck.Common.Messaging.Abstractions;
 using MailCheck.Dkim.Contracts.Entity;
 using MailCheck.Dkim.Contracts.Evaluator;
 using MailCheck.Dkim.Contracts.Evaluator.Domain;
+using MailCheck.Dkim.Contracts.SharedDomain;
 using MailCheck.Dkim.Entity.Config;
 using MailCheck.Dkim.Entity.Entity;
 using MailCheck.Dkim.Entity.Entity.Notifications;
 using MailCheck.Dkim.Entity.Entity.Notifiers;
 using NUnit.Framework;
-using Message = MailCheck.Dkim.Entity.Entity.Message;
-using MessageType = MailCheck.Dkim.Entity.Entity.MessageType;
+using Message = MailCheck.Dkim.Contracts.SharedDomain.Message;
 
 namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
 {
@@ -42,8 +42,8 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id1,"selector 1 record 1 message 1", string.Empty, MessageType.Info),
-                    new Message(Id2,"selector 1 record 1 message 2", string.Empty, MessageType.Info)
+                    new Message(Id1, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1", string.Empty),
+                    new Message(Id2, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 2", string.Empty)
                 })
             });
 
@@ -51,8 +51,8 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1,EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty),
-                    new DkimEvaluatorMessage(Id2,EvaluationErrorType.Info, "selector 1 record 1 message 2", string.Empty)
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty),
+                    new DkimEvaluatorMessage(Id2, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 2", string.Empty)
                 })
             });
 
@@ -65,7 +65,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisorySustained>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
@@ -78,7 +78,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id,"selector 1 record 1 message 1", string.Empty, MessageType.Info)
+                    new Message(Id, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1", string.Empty)
                 })
             });
 
@@ -86,7 +86,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id,EvaluationErrorType.Info, "selector 1 record 1 message 1 same as old", string.Empty)
+                    new DkimEvaluatorMessage(Id, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1 same as old", string.Empty)
                 }),
 
                 new DkimSelectorResult(new Contracts.SharedDomain.DkimSelector( "rogueSelector"), null)
@@ -101,12 +101,12 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisorySustained>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
-        public void RaisesAdvisorySustainedAndAddAdvisoryWhenMessageChanges()
+        public void RaisesOnlyAdvisorySustainedEvenWhenMessageChanges()
         {
             Guid Id1 = Guid.NewGuid();
             
@@ -114,8 +114,8 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id1,"selector 1 record 1 message 1", string.Empty, MessageType.Info),
-                    new Message(Guid.NewGuid(),"selector 1 record 1 message 2", string.Empty, MessageType.Info)
+                    new Message(Id1, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1", string.Empty),
+                    new Message(Guid.NewGuid(), "mailcheck.dkim.testName2", MessageType.info, "selector 1 record 1 message 2", string.Empty)
                 })
             });
 
@@ -123,28 +123,22 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1,EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty),
-                    new DkimEvaluatorMessage(Guid.NewGuid(),EvaluationErrorType.Info, "selector 1 record 1 message 3", string.Empty)
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty),
+                    new DkimEvaluatorMessage(Guid.NewGuid(), "mailcheck.dkim.testName2", EvaluationErrorType.Info, "selector 1 record 1 message 3", string.Empty)
                 })
             });
 
             _advisoryChangedNotifier.Handle(oldState, newRecord);
             
-            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryAdded>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisoryRemoved>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => _messageDispatcher.Dispatch(A<DkimAdvisorySustained>._, A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
-                    A<DkimAdvisoryRemoved>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
-                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 2"), A<string>._)).MustHaveHappenedOnceExactly();
-
-            A.CallTo(() =>
-                _messageDispatcher.Dispatch(
-                    A<DkimAdvisoryAdded>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
-                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 3"), A<string>._)).MustHaveHappenedOnceExactly();
+                    A<DkimAdvisorySustained>.That.Matches(x =>
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
+                        x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
@@ -156,8 +150,8 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id1,"selector 1 record 1 message 1", string.Empty, MessageType.Info),
-                    new Message(Guid.NewGuid(),"selector 1 record 1 message 2", string.Empty, MessageType.Info)
+                    new Message(Id1, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1", string.Empty),
+                    new Message(Guid.NewGuid(), "mailcheck.dkim.testName2", MessageType.info, "selector 1 record 1 message 2", string.Empty)
                 })
             });
 
@@ -165,7 +159,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1,EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty)
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty)
                 })
             });
 
@@ -178,13 +172,13 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryRemoved>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 2"), A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisorySustained>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
@@ -197,7 +191,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id1, "selector 1 record 1 message 1", string.Empty, MessageType.Info)
+                    new Message(Id1, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1", string.Empty)
                 })
             });
 
@@ -205,8 +199,8 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1,EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty),
-                    new DkimEvaluatorMessage(Guid.NewGuid(),EvaluationErrorType.Info, "selector 1 record 1 message 2", string.Empty)
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty),
+                    new DkimEvaluatorMessage(Guid.NewGuid(), "mailcheck.dkim.testName2", EvaluationErrorType.Info, "selector 1 record 1 message 2", string.Empty)
                 })
             });
 
@@ -219,13 +213,13 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisorySustained>.That.Matches(x => 
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryAdded>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 2"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
@@ -238,7 +232,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id1,"selector 1 record 1 message 1", string.Empty, MessageType.Info)
+                    new Message(Id1, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1", string.Empty)
                 })
             });
 
@@ -246,11 +240,11 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1,EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty)
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty)
                 }),
                 CreateDkimSelectorResult("selector2", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Guid.NewGuid(),EvaluationErrorType.Info, "selector 2 record 1 message 1", string.Empty)
+                    new DkimEvaluatorMessage(Guid.NewGuid(), "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 2 record 1 message 1", string.Empty)
                 })
             });
 
@@ -263,18 +257,18 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryAdded>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector2" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector2" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 2 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisorySustained>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
-        public void RaisesAdvisorySustainedAndAddAdvisoryWhenSelectorRemoved()
+        public void RaisesAdvisorySustainedAndRemoveAdvisoryWhenSelectorRemoved()
         {
             Guid Id1 = Guid.NewGuid();
 
@@ -282,11 +276,11 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelector("selector1", new List<Message>
                 {
-                    new Message(Id1,"selector 1 record 1 message 1",  string.Empty, MessageType.Info)
+                    new Message(Id1, "mailcheck.dkim.testName", MessageType.info, "selector 1 record 1 message 1",  string.Empty)
                 }),
                 CreateDkimSelector("selector2", new List<Message>
                 {
-                    new Message(Guid.NewGuid(),"selector 2 record 1 message 1",string.Empty, MessageType.Info)
+                    new Message(Guid.NewGuid(), "mailcheck.dkim.testName2", MessageType.info, "selector 2 record 1 message 1", string.Empty)
                 })
             });
 
@@ -294,7 +288,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1,EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty)
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1", string.Empty)
                 })
             });
 
@@ -307,13 +301,13 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisoryRemoved>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector2" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector2" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 2 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() =>
                 _messageDispatcher.Dispatch(
                     A<DkimAdvisorySustained>.That.Matches(x =>
-                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                        x.SelectorMessages[0].Selector == "selector1" && (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                         x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._)).MustHaveHappenedOnceExactly();
         }
 
@@ -327,7 +321,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
                 {
                     CreateDkimSelector("selector2", new List<Message>
                     {
-                        new Message(Guid.NewGuid(), "selector 2 record 1 message 1", string.Empty, MessageType.Info)
+                        new Message(Guid.NewGuid(), "mailcheck.dkim.testName", MessageType.info, "selector 2 record 1 message 1", string.Empty)
                     })
                 });
 
@@ -335,7 +329,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
             {
                 CreateDkimSelectorResult("selector1", new List<DkimEvaluatorMessage>
                 {
-                    new DkimEvaluatorMessage(Id1, EvaluationErrorType.Info, "selector 1 record 1 message 1",
+                    new DkimEvaluatorMessage(Id1, "mailcheck.dkim.testName", EvaluationErrorType.Info, "selector 1 record 1 message 1",
                         string.Empty)
                 })
             });
@@ -352,7 +346,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
                     _messageDispatcher.Dispatch(
                         A<DkimAdvisoryAdded>.That.Matches(x =>
                             x.SelectorMessages[0].Selector == "selector1" &&
-                            (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                            (MessageType)x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                             x.SelectorMessages[0].Messages[0].Text == "selector 1 record 1 message 1"), A<string>._))
                 .MustHaveHappenedOnceExactly();
 
@@ -360,7 +354,7 @@ namespace MailCheck.Dkim.Entity.Test.Entity.Notifiers
                     _messageDispatcher.Dispatch(
                         A<DkimAdvisoryRemoved>.That.Matches(x =>
                             x.SelectorMessages[0].Selector == "selector2" &&
-                            (MessageType) x.SelectorMessages[0].Messages[0].MessageType == MessageType.Info &&
+                            (MessageType) x.SelectorMessages[0].Messages[0].MessageType == MessageType.info &&
                             x.SelectorMessages[0].Messages[0].Text == "selector 2 record 1 message 1"), A<string>._))
                 .MustHaveHappenedOnceExactly();
         }

@@ -5,6 +5,7 @@ namespace MailCheck.Dkim.Entity.Config
     public interface IDkimEntityConfig
     {
         string SnsTopicArn { get; }
+        string WebUrl { get; }
     }
 
     public class DkimEntityConfig : IDkimEntityConfig
@@ -12,8 +13,10 @@ namespace MailCheck.Dkim.Entity.Config
         public DkimEntityConfig(IEnvironmentVariables environmentVariables)
         {
             SnsTopicArn = environmentVariables.Get("SnsTopicArn");
+            WebUrl = environmentVariables.Get("WebUrl");
         }
 
         public string SnsTopicArn { get; }
+        public string WebUrl { get; }
     }
 }

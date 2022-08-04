@@ -9,17 +9,17 @@ namespace MailCheck.Dkim.Evaluator.Test.Parsers.Strategy
     [TestFixture]
     public class ServiceTypeParserStrategyTests
     {
-        [TestCase(null, ServiceTypeType.Unknown, "Invalid value 'null' for s", EvaluationErrorType.Error, TestName = "null is invalid value")]
-        [TestCase("", ServiceTypeType.Unknown, "Invalid value '' for s", EvaluationErrorType.Error, TestName = "empty string is invalid value")]
+        [TestCase(null, ServiceTypeType.Unknown, "Selector test-selector. Invalid value 'null' for s", EvaluationErrorType.Error, TestName = "null is invalid value")]
+        [TestCase("", ServiceTypeType.Unknown, "Selector test-selector. Invalid value '' for s", EvaluationErrorType.Error, TestName = "empty string is invalid value")]
         [TestCase("email", ServiceTypeType.Email, null, null, TestName = "email is valid value")]
-        [TestCase("EmAiL", ServiceTypeType.Unknown, "Invalid value 'EmAiL' for s", EvaluationErrorType.Error, TestName = "non lowercase EmAiL is invalid value")]
+        [TestCase("EmAiL", ServiceTypeType.Unknown, "Selector test-selector. Invalid value 'EmAiL' for s", EvaluationErrorType.Error, TestName = "non lowercase EmAiL is invalid value")]
         [TestCase("*", ServiceTypeType.Any, null, null, TestName = "* is valid value")]
-        [TestCase("test", ServiceTypeType.Unknown, "Invalid value 'test' for s", EvaluationErrorType.Error, TestName = "random string is invalid value")]
+        [TestCase("test", ServiceTypeType.Unknown, "Selector test-selector. Invalid value 'test' for s", EvaluationErrorType.Error, TestName = "random string is invalid value")]
         public void ServiceTypeParserStrategy(string tokenValue, ServiceTypeType serviceTypeType, string errorMessageStartsWith, EvaluationErrorType? errorType)
         {
             ServiceTypeParserStrategy serviceTypeParserStrategy = new ServiceTypeParserStrategy();
 
-            EvaluationResult<Tag> serviceTypeResult = serviceTypeParserStrategy.Parse(tokenValue);
+            EvaluationResult<Tag> serviceTypeResult = serviceTypeParserStrategy.Parse("test-selector", tokenValue);
 
             ServiceType serviceType = (ServiceType)serviceTypeResult.Item;
 

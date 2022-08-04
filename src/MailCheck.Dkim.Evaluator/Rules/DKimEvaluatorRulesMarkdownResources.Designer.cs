@@ -8,10 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MailCheck.Dkim.Evaluator.Rules
-{
+namespace MailCheck.Dkim.Evaluator.Rules {
     using System;
-
+    
 
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -23,65 +22,54 @@ namespace MailCheck.Dkim.Evaluator.Rules
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class DKimEvaluatorRulesMarkdownResources
-    {
-
+    public class DKimEvaluatorRulesMarkdownResources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal DKimEvaluatorRulesMarkdownResources()
-        {
+        internal DKimEvaluatorRulesMarkdownResources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MailCheck.Dkim.Evaluator.Rules.DKimEvaluatorRulesMarkdownResources", typeof(DKimEvaluatorRulesMarkdownResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        public static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to The selector is incorrectly configured.
-        ///
-        ///This key has been revoked
+        ///   Looks up a localized string similar to The key looked like Base64 but could not successfully be decoded, this may be because it has been corrupted, or is otherwise incomplete.
+        ///    This is most likely a manual copy and pasting error, please compare the key in your DKIM selector DNS entry with that of your mail server.
         /// </summary>
-        public static string NullPublicKeyConfigured
-        {
-            get
-            {
-                return ResourceManager.GetString("NullPublicKeyConfigured", resourceCulture);
+        public static string CorruptPublicKeyErrorMessage {
+            get {
+                return ResourceManager.GetString("CorruptPublicKeyErrorMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The selector is incorrectly configured.
         ///
@@ -89,14 +77,23 @@ namespace MailCheck.Dkim.Evaluator.Rules
         ///
         ///`v=DKIM1;p=KEY` or `p=KEY`.
         /// </summary>
-        public static string IncorrectPublicKeyConfigured
-        {
-            get
-            {
+        public static string IncorrectPublicKeyConfigured {
+            get {
                 return ResourceManager.GetString("IncorrectPublicKeyConfigured", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selector has been revoked.
+        ///
+        ///An empty key signals to clients that the selector should be removed and should no longer be trusted.
+        /// </summary>
+        public static string NullPublicKeyConfigured {
+            get {
+                return ResourceManager.GetString("NullPublicKeyConfigured", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to If the intention is to revoke this key then the p= tag should be included but should have an empty key.
         ///
@@ -104,34 +101,31 @@ namespace MailCheck.Dkim.Evaluator.Rules
         ///
         ///[RFC 6376 Section 6.1.2 7](https://tools.ietf.org/html/rfc6376#section-6.1.2).
         /// </summary>
-        public static string PublicKeyDataTagMustExistErrorMessage
-        {
-            get
-            {
+        public static string PublicKeyDataTagMustExistErrorMessage {
+            get {
                 return ResourceManager.GetString("PublicKeyDataTagMustExistErrorMessage", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We have detected that you are using a 1024-bit public rsa key. We recommend a stronger key size of 2048-bits. 
+        ///
+        ///For further information about setting up and maintaining DKIM please refer to our guidance:  [Create and manage a DKIM record](https://www.ncsc.gov.uk/collection/email-security-and-anti-spoofing/configure-anti-spoofing-controls-/create-and-manage-a-dkim-record).
+        /// </summary>
+        public static string PublicKeyIsToShortUseLongerErrorMessage {
+            get {
+                return ResourceManager.GetString("PublicKeyIsToShortUseLongerErrorMessage", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Valid key types are currently [ed25519](https://tools.ietf.org/html/rfc8463) [rsa](https://tools.ietf.org/html/rfc6376#section-7.6)
         ///
         ///[IANA DKIM registry](https://www.iana.org/assignments/dkim-parameters/dkim-parameters.xhtml#dkim-parameters-6).
         /// </summary>
-        public static string PublicKeyTypeTagMustExistErrorMessage
-        {
-            get
-            {
+        public static string PublicKeyTypeTagMustExistErrorMessage {
+            get {
                 return ResourceManager.GetString("PublicKeyTypeTagMustExistErrorMessage", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to The public key is corrupt please compart the DKIM DNS entry with the DKIM key configured in your mail service
-        /// </summary>
-        public static string CorruptPublicKeyErrorMessage
-        {
-            get
-            {
-                return ResourceManager.GetString("CorruptPublicKeyErrorMessage", resourceCulture);
             }
         }
     }

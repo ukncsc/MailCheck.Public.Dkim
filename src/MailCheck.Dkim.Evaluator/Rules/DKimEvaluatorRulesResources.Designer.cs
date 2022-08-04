@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MailCheck.Dkim.Evaluator.Rules
-{
+namespace MailCheck.Dkim.Evaluator.Rules {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -20,131 +19,107 @@ namespace MailCheck.Dkim.Evaluator.Rules
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class DKimEvaluatorRulesResources
-    {
-
+    public class DKimEvaluatorRulesResources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal DKimEvaluatorRulesResources()
-        {
+        internal DKimEvaluatorRulesResources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MailCheck.Dkim.Evaluator.Rules.DKimEvaluatorRulesResources", typeof(DKimEvaluatorRulesResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        public static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
-
         
         /// <summary>
-        ///   Looks up a localized string similar to The selector has been revoked
+        ///   Looks up a localized string similar to Selector {0}. The public key could not be decoded, it may be corrupt or incomplete..
         /// </summary>
-        public static string NullPublicKeyConfigured
-        {
-            get
-            {
+        public static string CorruptPublicKeyErrorMessage {
+            get {
+                return ResourceManager.GetString("CorruptPublicKeyErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selector {0}. The selector is incorrectly configured..
+        /// </summary>
+        public static string IncorrectPublicKeyConfigured {
+            get {
+                return ResourceManager.GetString("IncorrectPublicKeyConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selector {0}. The selector has been revoked..
+        /// </summary>
+        public static string NullPublicKeyConfigured {
+            get {
                 return ResourceManager.GetString("NullPublicKeyConfigured", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The selector is incorrectly configured..
+        ///   Looks up a localized string similar to Selector {0}. Record must contain a public key data tag..
         /// </summary>
-        public static string IncorrectPublicKeyConfigured
-        {
-            get
-            {
-                return ResourceManager.GetString("IncorrectPublicKeyConfigured", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Record must contain a public key data tag..
-        /// </summary>
-        public static string PublicKeyDataTagMustExistErrorMessage
-        {
-            get
-            {
+        public static string PublicKeyDataTagMustExistErrorMessage {
+            get {
                 return ResourceManager.GetString("PublicKeyDataTagMustExistErrorMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to The public rsa key is too short, key size {0}..
+        ///   Looks up a localized string similar to Selector {0}. The public rsa key is too short, key size {1}..
         /// </summary>
-        public static string PublicKeyIsToShortErrorMessage
-        {
-            get
-            {
+        public static string PublicKeyIsToShortErrorMessage {
+            get {
                 return ResourceManager.GetString("PublicKeyIsToShortErrorMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to The public rsa key is too short, key size {0} - Use a longer key size &gt;= 2048..
+        ///   Looks up a localized string similar to Selector {0}. We recommend a longer key size for this selector..
         /// </summary>
-        public static string PublicKeyIsToShortUseLongerErrorMessage
-        {
-            get
-            {
+        public static string PublicKeyIsToShortUseLongerErrorMessage {
+            get {
                 return ResourceManager.GetString("PublicKeyIsToShortUseLongerErrorMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Record must contain a public key type tag..
+        ///   Looks up a localized string similar to Selector {0}. This DKIM selector is not currently in use..
         /// </summary>
-        public static string PublicKeyTypeTagMustExistErrorMessage
-        {
-            get
-            {
-                return ResourceManager.GetString("PublicKeyTypeTagMustExistErrorMessage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to the public key could not be decoded.
-        /// </summary>
-        public static string CorruptPublicKeyErrorMessage
-        {
-            get
-            {
-                return ResourceManager.GetString("CorruptPublicKeyErrorMessage", resourceCulture);
+        public static string SelectorNotInUseInfoMessage {
+            get {
+                return ResourceManager.GetString("SelectorNotInUseInfoMessage", resourceCulture);
             }
         }
     }

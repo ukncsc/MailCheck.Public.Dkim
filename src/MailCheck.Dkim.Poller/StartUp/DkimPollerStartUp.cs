@@ -6,12 +6,14 @@ using Amazon.SimpleNotificationService;
 using DnsClient;
 using MailCheck.Common.Environment;
 using MailCheck.Common.Messaging.Abstractions;
+using MailCheck.Common.Util;
 using MailCheck.Dkim.Contracts.Entity;
 using MailCheck.Dkim.Poller.Config;
 using MailCheck.Dkim.Poller.Dns;
 using MailCheck.Dkim.Poller.Handlers;
 using MailCheck.Dkim.Poller.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -40,6 +42,7 @@ namespace MailCheck.Dkim.Poller.StartUp
                 .AddTransient<IDkimDnsClient, DkimDnsClient>()
                 .AddSingleton(CreateLookupClient)
                 .AddTransient<IHandle<DkimPollPending>, DkimPollerHandler>()
+                .AddTransient<IAuditTrailParser, AuditTrailParser>()
                 .AddTransient<IDnsNameServerProvider, DnsNameServerProvider>()
                 .AddTransient<IAmazonSimpleNotificationService, AmazonSimpleNotificationServiceClient>()
                 .AddTransient<IDkimPollerConfig, DkimPollerConfig>();
@@ -47,7 +50,7 @@ namespace MailCheck.Dkim.Poller.StartUp
 
         private static ILookupClient CreateLookupClient(IServiceProvider provider)
         {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            LookupClient lookupClient = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? new LookupClient(NameServer.GooglePublicDns, NameServer.GooglePublicDnsIPv6)
                 {
                     Timeout = provider.GetRequiredService<IDkimPollerConfig>().DnsRecordLookupTimeout
@@ -60,8 +63,11 @@ namespace MailCheck.Dkim.Poller.StartUp
                     UseCache = false,
                     UseTcpOnly = true,
                     EnableAuditTrail = true,
+                    Retries = 0,
                     Timeout = provider.GetRequiredService<IDkimPollerConfig>().DnsRecordLookupTimeout
                 });
+
+            return new AuditTrailLoggingLookupClientWrapper(lookupClient, provider.GetService<IAuditTrailParser>(), provider.GetService<ILogger<AuditTrailLoggingLookupClientWrapper>>());
         }
     }
 }
